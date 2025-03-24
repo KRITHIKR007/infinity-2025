@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Infinity 2025 - Registration Confirmation Page">
+    <meta name="keywords" content="Infinity 2025, tech fest, cultural fest, Jain University, registration">
+    <link rel="shortcut icon" href="../public/images/INFINITY GOLD LOGO 24.png" type="image/x-icon">
     <title>Registration Confirmation | Infinity 2025</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../public/styles/main.css">
@@ -222,7 +225,7 @@
                 <a href="mailto:infinity@jainuniversity.ac.in" class="text-purple-400 hover:text-purple-300 transition-colors">
                     infinity@jainuniversity.ac.in
                 </a>
-            </p>
+            </div>
         </div>
     </footer>
 
@@ -273,10 +276,16 @@
                         .eq('id', id)
                         .single();
                         
-                    if (error) throw error;
+                    if (error) {
+                        if (error.code === 'PGRST116') {
+                            throw new Error('Registration not found. Please check your registration ID.');
+                        } else {
+                            throw new Error(`Database error: ${error.message}`);
+                        }
+                    }
                     
                     if (!registration) {
-                        throw new Error('Registration not found');
+                        throw new Error('Registration not found. Please check your registration ID.');
                     }
                     
                     // Get selected events
@@ -306,7 +315,7 @@
             }
             
             // Update UI with registration data
-            function updateUI(registration, selectedEvents, teamMembers) {
+            async function updateUI(registration, selectedEvents, teamMembers) {
                 // Hide loading state, show confirmation details
                 loadingState.classList.add('hidden');
                 confirmationDetails.classList.remove('hidden');
@@ -344,24 +353,78 @@
                 // Update selected events list
                 const selectedEventsList = document.getElementById('selectedEventsList');
                 if (selectedEvents && selectedEvents.length > 0) {
-                    // We'll need to fetch the event details for each selected event
-                    // For now, just show the event IDs
-                    let eventsHtml = '';
+                    selectedEventsList.innerHTML = '<div class="animate-pulse bg-gray-800 bg-opacity-50 rounded-lg p-3"><div class="h-5 bg-gray-700 rounded w-3/4 mb-2"></div><div class="h-4 bg-gray-700 rounded w-1/2"></div></div>';
                     
-                    selectedEvents.forEach(event => {
-                        eventsHtml += `
-                            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 flex justify-between items-center">
-                                <div>
-                                    <h3 class="text-white font-medium">${event.event_id}</h3>
-                                    <p class="text-gray-400 text-sm">${registration.category} Event</p>
+                    try {
+                        // Fetch event details for each selected event
+                        const eventIds = selectedEvents.map(event => event.event_id);
+                        const { data: events, error: eventsError } = await supabase
+                            .from('events')
+                            .select('*')
+                            .in('id', eventIds);
+                            
+                        if (eventsError) throw eventsError;
+                        
+                        if (events && events.length > 0) {
+                            let eventsHtml = '';
+                            
+                            events.forEach(event => {
+                                eventsHtml += `
+                                    <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 flex justify-between items-center">
+                                        <div>
+                                            <h3 class="text-white font-medium">${event.name || 'Unknown Event'}</h3>
+                                            <p class="text-gray-400 text-sm">${event.category || registration.category} Event</p>
+                                        </div>
+                                        <div>
+                                            <span class="text-purple-400 font-medium">₹${event.fee || 0}</span>
+                                        </div>
+                                    </div>
+                                `;
+                            });
+                            
+                            selectedEventsList.innerHTML = eventsHtml;
+                        } else {
+                            selectedEventsList.innerHTML = `
+                                <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3">
+                                    <p class="text-gray-400">No event details available</p>
                                 </div>
+                            `;
+                        }
+                    } catch (error) {
+                        console.error('Error fetching event details:', error);
+                        selectedEventsList.innerHTML = `
+                            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3">
+                                <p class="text-gray-400">Failed to load event details</p>
                             </div>
                         `;
-                    });
-                    
-                    selectedEventsList.innerHTML = eventsHtml;
+                    }
                 } else {
-                    selectedEventsList.innerHTML = '<p class="text-gray-400">No events selected</p>';
+                    selectedEventsList.innerHTML = `
+                        <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3">
+                            <p class="text-gray-400">No events selected</p>
+                        </div>
+                    `;
+                }
+                
+                // Display team members if available
+                if (teamMembers && teamMembers.length > 0) {
+                    // Add a section for team members
+                    const teamMembersHtml = `
+                        <div class="glass-effect rounded-lg p-6 mb-6">
+                            <h2 class="text-xl font-semibold text-purple-400 mb-4">Team Members</h2>
+                            <div class="space-y-2">
+                                ${teamMembers.map((member, index) => `
+                                    <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3">
+                                        <p class="text-white font-medium">${index === 0 ? 'Team Lead: ' : 'Member ' + (index + 1) + ': '}${member.name}</p>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Insert after the events details section
+                    const eventsSection = document.querySelector('.glass-effect.rounded-lg.p-6.mb-6:nth-of-type(2)');
+                    eventsSection.insertAdjacentHTML('afterend', teamMembersHtml);
                 }
                 
                 // Set up download button
@@ -396,15 +459,24 @@
             
             // Generate PDF for download
             function generatePDF(registration, selectedEvents, teamMembers) {
-                // This would typically use a PDF generation library like jsPDF
-                // For now, we'll just alert
-                alert('PDF download functionality will be implemented here');
+                alert('PDF generation is not available in this demo version.\n\nYour confirmation details have been saved in our system.\nPlease take a screenshot of this page for your records.');
                 
-                // Example of what this might look like:
-                // const doc = new jsPDF();
-                // doc.text('Registration Confirmation', 20, 20);
-                // doc.text(`Registration ID: ${registration.id}`, 20, 30);
-                // doc.save(`INFINITY-2025-Registration-${registration.id}.pdf`);
+                // You would typically use a library like jsPDF or pdfmake here
+                // Example with jsPDF would look like:
+                /*
+                const doc = new jsPDF();
+                doc.setFontSize(22);
+                doc.text('INFINITY-2025 Registration Confirmation', 20, 20);
+                doc.setFontSize(16);
+                doc.text(`Registration ID: ${registration.id}`, 20, 40);
+                doc.text(`Name: ${registration.name}`, 20, 50);
+                doc.text(`Email: ${registration.email}`, 20, 60);
+                doc.text(`Phone: ${registration.phone}`, 20, 70);
+                doc.text(`University: ${registration.university}`, 20, 80);
+                doc.text(`Total Amount: ₹${registration.total_amount}`, 20, 90);
+                doc.text(`Payment Status: ${registration.payment_status}`, 20, 100);
+                doc.save(`INFINITY-2025-Registration-${registration.id}.pdf`);
+                */
             }
             
             // Share registration details

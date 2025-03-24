@@ -62,7 +62,14 @@ export async function getEvents() {
 
 // Submit registration to Supabase (now using database.js)
 export async function submitRegistration(registrationData) {
-    return await saveRegistration(registrationData);
+    const result = await saveRegistration(registrationData);
+    
+    if (result.success) {
+        // Redirect to confirmation page with the registration ID
+        window.location.href = `confirmation.html?id=${result.registrationId}`;
+    }
+    
+    return result;
 }
 
 // Event data
@@ -910,4 +917,262 @@ async function fetchEventsData() {
 }
 
 // Rest of the registration page code...
+// ...existing code...
+
+// Event listeners for navigation buttons
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('Register page loaded');
+    
+    try {
+        // Initialize UI elements
+        initElements();
+        
+        // Setup event listeners
+        setupEventListeners();
+        
+        // Show first step
+        showFormStep(1);
+        
+        // Fetch events data from database
+        await fetchEventsData();
+        
+        // Initialize file uploader
+        initFileUploader();
+        
+    } catch (error) {
+        console.error('Error initializing registration page:', error);
+        showError('Failed to initialize registration form. Please refresh the page and try again.');
+    } finally {
+        // Hide loading screen
+        hideLoadingScreen();
+    }
+});
+
+// Setup event listeners for buttons
+function setupEventListeners() {
+    console.log('Setting up event listeners');
+    
+    // Step buttons
+    const step1NextBtn = document.getElementById('step1NextBtn');
+    const step2PrevBtn = document.getElementById('step2PrevBtn');
+    const step2NextBtn = document.getElementById('step2NextBtn');
+    const step3PrevBtn = document.getElementById('step3PrevBtn');
+    const step3NextBtn = document.getElementById('step3NextBtn');
+    const step4PrevBtn = document.getElementById('step4PrevBtn');
+    
+    // Category buttons
+    const techCategoryBtn = document.getElementById('techCategoryBtn');
+    const culturalCategoryBtn = document.getElementById('culturalCategoryBtn');
+    
+    // Payment buttons
+    const qrPaymentCard = document.getElementById('qrPaymentCard');
+    const venuePaymentCard = document.getElementById('venuePaymentCard');
+    
+    // Submit button
+    const submitBtn = document.getElementById('submitBtn');
+    const registrationForm = document.getElementById('registrationForm');
+    
+    // Add team member button
+    const addTeamMemberBtn = document.getElementById('addTeamMemberBtn');
+    
+    // Add event listeners with error handling
+    if (step1NextBtn) {
+        step1NextBtn.addEventListener('click', function() {
+            console.log('Step 1 Next clicked');
+            if (validateStep1()) {
+                goToStep(2);
+            }
+        });
+    }
+    
+    if (step2PrevBtn) {
+        step2PrevBtn.addEventListener('click', function() {
+            goToStep(1);
+        });
+    }
+    
+    if (step2NextBtn) {
+        step2NextBtn.addEventListener('click', function() {
+            console.log('Step 2 Next clicked');
+            if (validateStep2()) {
+                goToStep(3);
+            }
+        });
+    }
+    
+    if (step3PrevBtn) {
+        step3PrevBtn.addEventListener('click', function() {
+            goToStep(2);
+        });
+    }
+    
+    if (step3NextBtn) {
+        step3NextBtn.addEventListener('click', function() {
+            console.log('Step 3 Next clicked');
+            if (validateStep3()) {
+                goToStep(4);
+            }
+        });
+    }
+    
+    if (step4PrevBtn) {
+        step4PrevBtn.addEventListener('click', function() {
+            goToStep(3);
+        });
+    }
+    
+    // Category selection
+    if (techCategoryBtn) {
+        techCategoryBtn.addEventListener('click', function() {
+            console.log('Tech category clicked');
+            selectCategory('tech');
+        });
+    }
+    
+    if (culturalCategoryBtn) {
+        culturalCategoryBtn.addEventListener('click', function() {
+            console.log('Cultural category clicked');
+            selectCategory('cultural');
+        });
+    }
+    
+    // Payment method selection
+    if (qrPaymentCard) {
+        qrPaymentCard.addEventListener('click', function() {
+            console.log('QR payment selected');
+            selectPaymentMethod('qr');
+        });
+    }
+    
+    if (venuePaymentCard) {
+        venuePaymentCard.addEventListener('click', function() {
+            console.log('Venue payment selected');
+            selectPaymentMethod('venue');
+        });
+    }
+    
+    // Add team member
+    if (addTeamMemberBtn) {
+        addTeamMemberBtn.addEventListener('click', function() {
+            console.log('Add team member clicked');
+            addTeamMember();
+        });
+    }
+    
+    // Form submission
+    if (registrationForm) {
+        registrationForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            console.log('Form submitted');
+            
+            if (validateStep4()) {
+                submitRegistration();
+            }
+        });
+    }
+    
+    // Event cards - handle clicks on entire card
+    const eventCards = document.querySelectorAll('.event-card');
+    eventCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+            // Don't toggle if clicking on the event checkbox directly
+            if (e.target.closest('.event-checkbox-input')) {
+                return;
+            }
+            
+            // Find the checkbox
+            const checkbox = this.querySelector('.event-checkbox-input');
+            if (checkbox) {
+                // Toggle the checked state
+                checkbox.checked = !checkbox.checked;
+                
+                // Manually trigger the change event
+                const changeEvent = new Event('change', { bubbles: true });
+                checkbox.dispatchEvent(changeEvent);
+            }
+        });
+    });
+    
+    // Event checkboxes - handle specific checkbox functionality
+    const eventCheckboxes = document.querySelectorAll('.event-checkbox-input');
+    eventCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const eventCard = this.closest('.event-card');
+            const eventId = this.dataset.eventId;
+            const fee = parseInt(eventCard.dataset.fee, 10);
+            
+            if (this.checked) {
+                state.selectedEvents.add(eventId);
+                state.totalFee += fee;
+                eventCard.classList.add('selected');
+            } else {
+                state.selectedEvents.delete(eventId);
+                state.totalFee -= fee;
+                eventCard.classList.remove('selected');
+            }
+            
+            // Update UI to reflect selection
+            updateSelectedEventsList();
+            updateTotalFee();
+        });
+    });
+    
+    console.log('Event listeners setup complete');
+}
+
+// ...existing code...
+
+// Make the navigation function more reliable
+function goToStep(step) {
+    console.log(`Navigating to step ${step}`);
+    
+    try {
+        // Hide all steps
+        const formSteps = document.querySelectorAll('.form-step');
+        formSteps.forEach(s => s.classList.add('hidden'));
+        
+        // Show requested step
+        const targetStep = document.getElementById(`step${step}`);
+        if (targetStep) {
+            targetStep.classList.remove('hidden');
+            state.formStep = step;
+        } else {
+            console.error(`Step ${step} not found`);
+            return false;
+        }
+        
+        // Update step indicators
+        const stepIndicators = document.querySelectorAll('.step-indicator');
+        stepIndicators.forEach((indicator, index) => {
+            if (index + 1 === step) {
+                indicator.classList.add('active');
+            } else if (index + 1 < step) {
+                indicator.classList.add('completed');
+                indicator.classList.remove('active');
+            } else {
+                indicator.classList.remove('active', 'completed');
+            }
+        });
+        
+        // Update step connectors
+        for (let i = 1; i < 4; i++) {
+            const connector = document.getElementById(`stepConnector${i}`);
+            if (connector) {
+                if (i < step) {
+                    connector.classList.remove('bg-gray-700');
+                    connector.classList.add('bg-green-600');
+                } else {
+                    connector.classList.remove('bg-green-600');
+                    connector.classList.add('bg-gray-700');
+                }
+            }
+        }
+        
+        return true;
+    } catch (error) {
+        console.error('Error navigating to step:', error);
+        return false;
+    }
+}
+
 // ...existing code...

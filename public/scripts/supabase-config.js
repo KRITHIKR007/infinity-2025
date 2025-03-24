@@ -1,8 +1,8 @@
 // Supabase configuration and environment setup
 (function() {
-    // Default development configuration
-    const SUPABASE_URL = 'https://your-supabase-project-url.supabase.co';
-    const SUPABASE_KEY = 'your-supabase-anon-key'; // Public anon key only
+    // Default development configuration - updated with actual credentials
+    const SUPABASE_URL = 'https://ceickbodqhwfhcpabfdq.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlaWNrYm9kcWh3ZmhjcGFiZmRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzMzU2MTgsImV4cCI6MjA1NzkxMTYxOH0.ZyTG1FkQzjQ0CySlyvkQEYPHWBbZJd--vsB_IqILuo8';
     
     // Try to load from environment if available (for deployed environments)
     const envUrl = typeof process !== 'undefined' && process.env ? 

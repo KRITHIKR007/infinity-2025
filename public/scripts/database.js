@@ -1,4 +1,4 @@
-import { supabase, TABLES } from '../../supabase-setup.js';
+import { supabase } from '../../supabase.js';
 import { PhotoService } from './services/photo-service.js';
 
 // Database tables constants

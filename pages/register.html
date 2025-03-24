@@ -736,37 +736,62 @@
                             
                             <!-- Payment Proof Upload (for QR payment) -->
                             <div id="paymentProofSection" class="mt-4">
-                                <div id="techQrCode" class="hidden mb-4">
+                                <div id="techQrCode" class="mb-4">
                                     <h4 class="text-white font-medium mb-2">Scan QR Code for Tech Events</h4>
-                                    <div class="flex items-center">
-                                        <img src="../public/images/IMG_1787.PNG" alt="Tech Events QR Code" class="w-32 h-32 mr-4 bg-white p-2 rounded">
+                                    <div class="flex items-center flex-col md:flex-row">
+                                        <div class="bg-white p-3 rounded-lg mb-4 md:mb-0 md:mr-4 flex-shrink-0">
+                                            <img src="../public/images/IMG_1787.PNG" alt="Tech Events QR Code" class="w-40 h-40">
+                                        </div>
                                         <div>
-                                            <p class="text-purple-400">UPI ID: infinity.tech@jain.ac.in</p>
-                                            <p class="text-gray-300 text-sm">Please add your name in the payment reference</p>
+                                            <p class="text-purple-400 font-medium mb-1">UPI ID: infinity.tech@jain.ac.in</p>
+                                            <p class="text-gray-300 text-sm mb-2">Technical Events Coordinator: Dhrub Kumar Jha</p>
+                                            <p class="text-gray-300 text-sm mb-2">Phone: +91 8296019911</p>
+                                            <div class="bg-gray-800 rounded-lg p-3 border border-gray-700">
+                                                <p class="text-yellow-400 text-sm mb-1"><i class="fas fa-info-circle mr-1"></i> Payment Instructions:</p>
+                                                <ol class="text-gray-300 text-sm list-decimal ml-4 space-y-1">
+                                                    <li>Scan the QR code using any UPI app (Google Pay, PhonePe, Paytm)</li>
+                                                    <li>Enter the exact amount: ₹<span id="techPaymentAmount">0</span></li>
+                                                    <li>Add your name in the payment note/reference</li>
+                                                    <li>Take a screenshot of the successful payment</li>
+                                                    <li>Upload the screenshot below</li>
+                                                </ol>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <div id="culturalQrCode" class="hidden mb-4">
                                     <h4 class="text-white font-medium mb-2">Scan QR Code for Cultural Events</h4>
-                                    <div class="flex items-center">
-                                        <img src="../public/images/GooglePay_QR (2).png" alt="Cultural Events QR Code" class="w-32 h-32 mr-4 bg-white p-2 rounded">
+                                    <div class="flex items-center flex-col md:flex-row">
+                                        <div class="bg-white p-3 rounded-lg mb-4 md:mb-0 md:mr-4 flex-shrink-0">
+                                            <img src="../public/images/GooglePay_QR (2).png" alt="Cultural Events QR Code" class="w-40 h-40">
+                                        </div>
                                         <div>
-                                            <p class="text-purple-400">UPI ID: rohankrishnablr2004@okicici</p>
-                                            <p class="text-gray-300 text-sm">Please add your name in the payment reference</p>
+                                            <p class="text-purple-400 font-medium mb-1">UPI ID: rohankrishnablr2004@okicici</p>
+                                            <p class="text-gray-300 text-sm mb-2">Cultural Events Coordinator: Rohan</p>
+                                            <p class="text-gray-300 text-sm mb-2">Phone: +91 9353074448</p>
+                                            <div class="bg-gray-800 rounded-lg p-3 border border-gray-700">
+                                                <p class="text-yellow-400 text-sm mb-1"><i class="fas fa-info-circle mr-1"></i> Payment Instructions:</p>
+                                                <ol class="text-gray-300 text-sm list-decimal ml-4 space-y-1">
+                                                    <li>Scan the QR code using any UPI app (Google Pay, PhonePe, Paytm)</li>
+                                                    <li>Enter the exact amount: ₹<span id="culturalPaymentAmount">0</span></li>
+                                                    <li>Add your name in the payment note/reference</li>
+                                                    <li>Take a screenshot of the successful payment</li>
+                                                    <li>Upload the screenshot below</li>
+                                                </ol>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 
-                                <!-- Remove payment reference field -->
-                                
                                 <div class="mb-4">
-                                    <label for="paymentProof" id="uploadLabel" class="block text-gray-300 text-sm font-medium mb-2">Upload Payment Proof/Screenshot</label>
-                                    <input type="file" id="paymentProof" name="paymentProof" accept="image/*" class="hidden">
+                                    <label for="paymentProof" id="uploadLabel" class="block text-gray-300 text-sm font-medium mb-2">Upload Payment Proof/Screenshot <span class="text-red-400">*</span></label>
+                                    <input type="file" id="paymentProof" name="paymentProof" accept="image/*" class="hidden" required>
                                     <div class="flex items-center justify-center w-full">
                                         <label for="paymentProof" class="w-full flex flex-col items-center px-4 py-6 bg-gray-800 text-white rounded-lg border-2 border-dashed border-gray-700 cursor-pointer hover:border-purple-500 transition-colors">
                                             <i class="fas fa-cloud-upload-alt text-gray-500 text-3xl mb-2"></i>
                                             <span class="text-gray-400 text-sm">Click to upload payment screenshot</span>
+                                            <span class="text-gray-500 text-xs mt-1">(Max size: 5MB, Formats: JPG, PNG, GIF)</span>
                                         </label>
                                     </div>
                                 </div>
@@ -1689,6 +1714,660 @@
                     alert("Navigation error occurred. Please try refreshing the page.");
                 }
             }
+        });
+    </script>
+
+    <script>
+        // Fix for event selection not working
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("🔄 Applying event selection fix...");
+            
+            // Direct selection of all event cards and checkboxes
+            const eventCards = document.querySelectorAll('.event-card');
+            const eventCheckboxes = document.querySelectorAll('.event-checkbox-input');
+            
+            // Global variables to track state
+            let selectedCategory = 'tech'; // Default category
+            let selectedEvents = new Set();
+            let totalFee = 0;
+            
+            // Fix event card click handling
+            eventCards.forEach(card => {
+                // Remove any existing click handlers by cloning and replacing
+                const newCard = card.cloneNode(true);
+                card.parentNode.replaceChild(newCard, card);
+                
+                // Add new direct click handler
+                newCard.addEventListener('click', function(e) {
+                    // Don't handle click if card is disabled
+                    if (newCard.classList.contains('disabled')) {
+                        console.log("Card is disabled, ignoring click");
+                        return;
+                    }
+                    
+                    console.log("Card clicked:", newCard.dataset.eventId);
+                    
+                    // Find the checkbox within this card
+                    const checkbox = newCard.querySelector('.event-checkbox-input');
+                    if (checkbox) {
+                        // Toggle checkbox state
+                        checkbox.checked = !checkbox.checked;
+                        console.log("Checkbox toggled:", checkbox.checked);
+                        
+                        // Update visual appearance
+                        if (checkbox.checked) {
+                            newCard.classList.add('selected');
+                            newCard.querySelector('.event-checkbox span').classList.add('bg-purple-600');
+                            newCard.querySelector('.event-checkbox span').classList.remove('border-gray-500');
+                            
+                            // Add to selected events and update fee
+                            selectedEvents.add(newCard.dataset.eventId);
+                            totalFee += parseInt(newCard.dataset.fee || 0, 10);
+                        } else {
+                            newCard.classList.remove('selected');
+                            newCard.querySelector('.event-checkbox span').classList.remove('bg-purple-600');
+                            newCard.querySelector('.event-checkbox span').classList.add('border-gray-500');
+                            
+                            // Remove from selected events and update fee
+                            selectedEvents.delete(newCard.dataset.eventId);
+                            totalFee -= parseInt(newCard.dataset.fee || 0, 10);
+                        }
+                        
+                        // Update total amount display
+                        updateTotalAmount();
+                        
+                        // Update selected events list
+                        updateSelectedEventsList();
+                    } else {
+                        console.error("No checkbox found in card");
+                    }
+                });
+                
+                // Also handle the checkbox directly to ensure it works
+                const checkbox = newCard.querySelector('.event-checkbox-input');
+                if (checkbox) {
+                    checkbox.addEventListener('change', function(e) {
+                        // Stop propagation to prevent double-triggering with card click
+                        e.stopPropagation();
+                        
+                        console.log("Checkbox changed directly:", this.checked);
+                        
+                        // Update card appearance
+                        if (this.checked) {
+                            newCard.classList.add('selected');
+                            newCard.querySelector('.event-checkbox span').classList.add('bg-purple-600');
+                            newCard.querySelector('.event-checkbox span').classList.remove('border-gray-500');
+                            
+                            // Add to selected events and update fee
+                            selectedEvents.add(newCard.dataset.eventId);
+                            totalFee += parseInt(newCard.dataset.fee || 0, 10);
+                        } else {
+                            newCard.classList.remove('selected');
+                            newCard.querySelector('.event-checkbox span').classList.remove('bg-purple-600');
+                            newCard.querySelector('.event-checkbox span').classList.add('border-gray-500');
+                            
+                            // Remove from selected events and update fee
+                            selectedEvents.delete(newCard.dataset.eventId);
+                            totalFee -= parseInt(newCard.dataset.fee || 0, 10);
+                        }
+                        
+                        // Update total amount display
+                        updateTotalAmount();
+                        
+                        // Update selected events list
+                        updateSelectedEventsList();
+                    });
+                }
+            });
+            
+            // Fix category selection buttons
+            const techCategoryBtn = document.getElementById('techCategoryBtn');
+            const culturalCategoryBtn = document.getElementById('culturalCategoryBtn');
+            const techEventsContainer = document.getElementById('techEventsContainer');
+            const culturalEventsContainer = document.getElementById('culturalEventsContainer');
+            
+            if (techCategoryBtn) {
+                techCategoryBtn.addEventListener('click', function() {
+                    console.log("Tech category selected");
+                    selectedCategory = 'tech';
+                    
+                    // Update UI
+                    techCategoryBtn.classList.add('bg-purple-600', 'text-white');
+                    techCategoryBtn.classList.remove('bg-gray-800', 'text-gray-300');
+                    culturalCategoryBtn.classList.add('bg-gray-800', 'text-gray-300');
+                    culturalCategoryBtn.classList.remove('bg-purple-600', 'text-white');
+                    
+                    // Show tech events, hide cultural events
+                    techEventsContainer.classList.remove('hidden');
+                    culturalEventsContainer.classList.add('hidden');
+                    
+                    // Show tech QR code in step 4
+                    const techQrCode = document.getElementById('techQrCode');
+                    const culturalQrCode = document.getElementById('culturalQrCode');
+                    if (techQrCode && culturalQrCode) {
+                        techQrCode.classList.remove('hidden');
+                        culturalQrCode.classList.add('hidden');
+                    }
+                });
+            }
+            
+            if (culturalCategoryBtn) {
+                culturalCategoryBtn.addEventListener('click', function() {
+                    console.log("Cultural category selected");
+                    selectedCategory = 'cultural';
+                    
+                    // Update UI
+                    culturalCategoryBtn.classList.add('bg-purple-600', 'text-white');
+                    culturalCategoryBtn.classList.remove('bg-gray-800', 'text-gray-300');
+                    techCategoryBtn.classList.add('bg-gray-800', 'text-gray-300');
+                    techCategoryBtn.classList.remove('bg-purple-600', 'text-white');
+                    
+                    // Show cultural events, hide tech events
+                    culturalEventsContainer.classList.remove('hidden');
+                    techEventsContainer.classList.add('hidden');
+                    
+                    // Show cultural QR code in step 4
+                    const techQrCode = document.getElementById('techQrCode');
+                    const culturalQrCode = document.getElementById('culturalQrCode');
+                    if (techQrCode && culturalQrCode) {
+                        techQrCode.classList.add('hidden');
+                        culturalQrCode.classList.remove('hidden');
+                    }
+                });
+            }
+            
+            // Helper function to update total amount display
+            function updateTotalAmount() {
+                const totalAmount = document.getElementById('totalAmount');
+                if (totalAmount) {
+                    totalAmount.textContent = `₹${totalFee}`;
+                    console.log("Total fee updated:", totalFee);
+                    
+                    // Also update payment amount displays
+                    const techPaymentAmount = document.getElementById('techPaymentAmount');
+                    const culturalPaymentAmount = document.getElementById('culturalPaymentAmount');
+                    if (techPaymentAmount) techPaymentAmount.textContent = totalFee;
+                    if (culturalPaymentAmount) culturalPaymentAmount.textContent = totalFee;
+                }
+            }
+            
+            // Helper function to update selected events list
+            function updateSelectedEventsList() {
+                const selectedEventsList = document.getElementById('selectedEventsList');
+                if (!selectedEventsList) return;
+                
+                if (selectedEvents.size === 0) {
+                    selectedEventsList.innerHTML = '<p class="text-gray-400">No events selected</p>';
+                    return;
+                }
+                
+                let eventsHtml = '';
+                const eventCards = document.querySelectorAll('.event-card');
+                
+                eventCards.forEach(card => {
+                    const eventId = card.dataset.eventId;
+                    
+                    if (selectedEvents.has(eventId)) {
+                        const eventName = card.querySelector('h3').textContent;
+                        const eventFee = card.dataset.fee;
+                        
+                        eventsHtml += `
+                            <div class="flex justify-between items-center mb-2 pb-2 border-b border-gray-700">
+                                <span class="text-white">${eventName}</span>
+                                <span class="text-purple-400">₹${eventFee}</span>
+                            </div>
+                        `;
+                    }
+                });
+                
+                selectedEventsList.innerHTML = eventsHtml;
+            }
+            
+            console.log("✅ Event selection fix applied successfully");
+        });
+    </script>
+
+    <!-- Consolidated form fixer script - this combines all previous fixes -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("🔧 Initializing registration form fixer...");
+            
+            // Fix for navigation between steps
+            function setupStepNavigation() {
+                // Direct button selectors
+                const stepButtons = {
+                    'step1NextBtn': {target: 2, validate: validateStep1},
+                    'step2PrevBtn': {target: 1},
+                    'step2NextBtn': {target: 3, validate: validateStep2},
+                    'step3PrevBtn': {target: 2},
+                    'step3NextBtn': {target: 4, validate: validateStep3},
+                    'step4PrevBtn': {target: 3}
+                };
+                
+                // Add click handlers to all navigation buttons
+                Object.keys(stepButtons).forEach(btnId => {
+                    const btn = document.getElementById(btnId);
+                    if (btn) {
+                        // Remove existing listeners by cloning
+                        const newBtn = btn.cloneNode(true);
+                        btn.parentNode.replaceChild(newBtn, btn);
+                        
+                        // Add direct handler
+                        newBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            const config = stepButtons[btnId];
+                            
+                            // Run validation if needed
+                            if (config.validate && typeof config.validate === 'function') {
+                                if (!config.validate()) return;
+                            }
+                            
+                            // Additional logic for step 2 -> 3 transition
+                            if (btnId === 'step2NextBtn') {
+                                // Prepare team step
+                                const hasTeamEvents = checkForTeamEvents();
+                                const teamEventsContainer = document.getElementById('teamEventsContainer');
+                                const noTeamEventsMessage = document.getElementById('noTeamEventsMessage');
+                                
+                                if (hasTeamEvents) {
+                                    const maxTeamSize = findMaxTeamSize();
+                                    window.maxTeamSize = maxTeamSize; // Store for later use
+                                    teamEventsContainer.classList.remove('hidden');
+                                    noTeamEventsMessage.classList.add('hidden');
+                                } else {
+                                    teamEventsContainer.classList.add('hidden');
+                                    noTeamEventsMessage.classList.remove('hidden');
+                                }
+                            }
+                            
+                            // Additional logic for step 3 -> 4 transition
+                            if (btnId === 'step3NextBtn') {
+                                // Update payment information
+                                updateSelectedEventsList();
+                                const selectedCategory = document.querySelector('#techCategoryBtn').classList.contains('bg-purple-600') ? 'tech' : 'cultural';
+                                
+                                // Show appropriate QR code
+                                const techQrCode = document.getElementById('techQrCode');
+                                const culturalQrCode = document.getElementById('culturalQrCode');
+                                if (selectedCategory === 'tech') {
+                                    techQrCode.classList.remove('hidden');
+                                    culturalQrCode.classList.add('hidden');
+                                } else {
+                                    techQrCode.classList.add('hidden');
+                                    culturalQrCode.classList.remove('hidden');
+                                }
+                            }
+                            
+                            // Navigate to target step
+                            navigateToStep(config.target);
+                        });
+                    }
+                });
+                
+                console.log("✅ Step navigation fixed");
+            }
+            
+            // Unified navigation function
+            function navigateToStep(stepNumber) {
+                console.log(`Navigating to step ${stepNumber}`);
+                
+                // Hide all steps
+                document.querySelectorAll('.form-step').forEach(step => {
+                    step.classList.remove('active');
+                    step.style.display = 'none';
+                });
+                
+                // Show target step
+                const targetStep = document.getElementById(`step${stepNumber}`);
+                if (targetStep) {
+                    targetStep.classList.add('active');
+                    targetStep.style.display = 'block';
+                }
+                
+                // Update step indicators
+                document.querySelectorAll('.step-indicator').forEach((indicator, index) => {
+                    if (index + 1 === stepNumber) {
+                        indicator.classList.add('active');
+                        indicator.classList.remove('completed');
+                    } else if (index + 1 < stepNumber) {
+                        indicator.classList.add('completed');
+                        indicator.classList.remove('active');
+                    } else {
+                        indicator.classList.remove('active', 'completed');
+                    }
+                });
+                
+                // Update current step
+                window.currentStep = stepNumber;
+            }
+            
+            // Validation functions
+            function validateStep1() {
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+                const phone = document.getElementById('phone').value.trim();
+                const university = document.getElementById('university').value.trim();
+                
+                if (!name) {
+                    showError('Please enter your full name');
+                    return false;
+                }
+                if (!email || !validateEmail(email)) {
+                    showError('Please enter a valid email address');
+                    return false;
+                }
+                if (!phone || !validatePhone(phone)) {
+                    showError('Please enter a valid 10-digit phone number');
+                    return false;
+                }
+                if (!university) {
+                    showError('Please enter your university/college name');
+                    return false;
+                }
+                
+                hideError();
+                return true;
+            }
+            
+            function validateStep2() {
+                // Check if any events are selected
+                const selectedEvents = getSelectedEvents();
+                if (selectedEvents.length === 0) {
+                    showError('Please select at least one event');
+                    return false;
+                }
+                
+                hideError();
+                return true;
+            }
+            
+            function validateStep3() {
+                // Skip validation if there are no team events
+                if (document.getElementById('noTeamEventsMessage').classList.contains('hidden')) {
+                    const teamName = document.getElementById('teamName').value.trim();
+                    if (!teamName) {
+                        showError('Please enter a team name');
+                        return false;
+                    }
+                    
+                    const teamMemberInputs = document.querySelectorAll('input[name^="teamMember"]');
+                    for (let input of teamMemberInputs) {
+                        if (!input.value.trim()) {
+                            showError('Please enter all team member names');
+                            return false;
+                        }
+                    }
+                }
+                
+                hideError();
+                return true;
+            }
+            
+            // Helper functions
+            function validateEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+            
+            function validatePhone(phone) {
+                return /^[0-9]{10}$/.test(phone);
+            }
+            
+            function showError(message) {
+                const errorAlert = document.getElementById('errorAlert');
+                const errorMessage = document.getElementById('errorMessage');
+                
+                if (errorAlert && errorMessage) {
+                    errorMessage.textContent = message;
+                    errorAlert.classList.remove('hidden');
+                } else {
+                    alert(message);
+                }
+            }
+            
+            function hideError() {
+                const errorAlert = document.getElementById('errorAlert');
+                if (errorAlert) {
+                    errorAlert.classList.add('hidden');
+                }
+            }
+            
+            function getSelectedEvents() {
+                const selected = [];
+                document.querySelectorAll('.event-card .event-checkbox-input:checked').forEach(checkbox => {
+                    selected.push(checkbox.dataset.eventId);
+                });
+                return selected;
+            }
+            
+            function checkForTeamEvents() {
+                const teamEvents = [
+                    'pitch4sustain', 'ctrl-z', 'phantom-hunt',
+                    'nritya-vedika', 'resonance', 'cosmic-drift',
+                    'innovathon', 'drone-xtreme', 'model-blitz',
+                    'aether-frames'
+                ];
+                
+                const selectedEvents = getSelectedEvents();
+                return selectedEvents.some(eventId => teamEvents.includes(eventId));
+            }
+            
+            function findMaxTeamSize() {
+                const teamSizes = {
+                    'pitch4sustain': 5,
+                    'ctrl-z': 4,
+                    'phantom-hunt': 5,
+                    'nritya-vedika': 15,
+                    'resonance': 6,
+                    'cosmic-drift': 10,
+                    'innovathon': 4,
+                    'drone-xtreme': 3,
+                    'model-blitz': 4,
+                    'aether-frames': 4
+                };
+                
+                let maxSize = 0;
+                const selectedEvents = getSelectedEvents();
+                
+                selectedEvents.forEach(eventId => {
+                    if (teamSizes[eventId] && teamSizes[eventId] > maxSize) {
+                        maxSize = teamSizes[eventId];
+                    }
+                });
+                
+                return maxSize;
+            }
+            
+            function updateSelectedEventsList() {
+                const selectedEventsList = document.getElementById('selectedEventsList');
+                if (!selectedEventsList) return;
+                
+                const selectedEvents = getSelectedEvents();
+                
+                if (selectedEvents.length === 0) {
+                    selectedEventsList.innerHTML = '<p class="text-gray-400">No events selected</p>';
+                    return;
+                }
+                
+                let eventsHtml = '';
+                let totalFee = 0;
+                
+                selectedEvents.forEach(eventId => {
+                    const card = document.querySelector(`.event-card[data-event-id="${eventId}"]`);
+                    if (card) {
+                        const eventName = card.querySelector('h3').textContent;
+                        const eventFee = parseInt(card.dataset.fee, 10);
+                        totalFee += eventFee;
+                        
+                        eventsHtml += `
+                            <div class="flex justify-between items-center mb-2 pb-2 border-b border-gray-700">
+                                <span class="text-white">${eventName}</span>
+                                <span class="text-purple-400">₹${eventFee}</span>
+                            </div>
+                        `;
+                    }
+                });
+                
+                selectedEventsList.innerHTML = eventsHtml;
+                
+                // Update total amount
+                const totalAmount = document.getElementById('totalAmount');
+                if (totalAmount) {
+                    totalAmount.textContent = `₹${totalFee}`;
+                    
+                    // Also update payment amounts
+                    const techPaymentAmount = document.getElementById('techPaymentAmount');
+                    const culturalPaymentAmount = document.getElementById('culturalPaymentAmount');
+                    if (techPaymentAmount) techPaymentAmount.textContent = totalFee;
+                    if (culturalPaymentAmount) culturalPaymentAmount.textContent = totalFee;
+                }
+            }
+            
+            // Fix for file upload preview
+            function setupFileUpload() {
+                const paymentProof = document.getElementById('paymentProof');
+                const previewContainer = document.getElementById('previewContainer');
+                const previewImage = document.getElementById('previewImage');
+                const removeImageBtn = document.getElementById('removeImageBtn');
+                const uploadLabel = document.getElementById('uploadLabel');
+                
+                if (paymentProof && previewContainer && previewImage) {
+                    paymentProof.addEventListener('change', function(e) {
+                        if (this.files && this.files[0]) {
+                            const file = this.files[0];
+                            
+                            if (file.size > 5 * 1024 * 1024) { // 5MB limit
+                                showError('File size exceeds the maximum limit of 5MB');
+                                this.value = '';
+                                previewContainer.classList.add('hidden');
+                                return;
+                            }
+                            
+                            const reader = new FileReader();
+                            
+                            reader.onload = function(e) {
+                                previewImage.src = e.target.result;
+                                previewContainer.classList.remove('hidden');
+                                if (uploadLabel) uploadLabel.textContent = 'Change Payment Proof';
+                            };
+                            
+                            reader.readAsDataURL(file);
+                        }
+                    });
+                    
+                    if (removeImageBtn) {
+                        removeImageBtn.addEventListener('click', function() {
+                            paymentProof.value = '';
+                            previewContainer.classList.add('hidden');
+                            if (uploadLabel) uploadLabel.textContent = 'Upload Payment Proof/Screenshot';
+                        });
+                    }
+                }
+            }
+            
+            // Fix for add team member button
+            function setupTeamMemberFields() {
+                const addTeamMemberBtn = document.getElementById('addTeamMemberBtn');
+                const teamMembersFields = document.getElementById('teamMembersFields');
+                
+                if (addTeamMemberBtn && teamMembersFields) {
+                    // Reset team member count
+                    window.teamMemberCount = 0;
+                    
+                    addTeamMemberBtn.addEventListener('click', function() {
+                        const maxTeamSize = window.maxTeamSize || 5;
+                        
+                        if (window.teamMemberCount >= maxTeamSize - 1) {
+                            showError(`Maximum team size is ${maxTeamSize} including you`);
+                            return;
+                        }
+                        
+                        window.teamMemberCount++;
+                        
+                        const fieldDiv = document.createElement('div');
+                        fieldDiv.className = 'mb-4';
+                        fieldDiv.innerHTML = `
+                            <div class="flex items-center">
+                                <input type="text" name="teamMember${window.teamMemberCount}" placeholder="Team Member ${window.teamMemberCount} Name"
+                                    class="flex-1 px-4 py-2 bg-gray-800 text-white border border-gray-700 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <button type="button" class="remove-team-member-btn ml-2 text-red-400 hover:text-red-300 transition-colors">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        `;
+                        
+                        teamMembersFields.appendChild(fieldDiv);
+                        
+                        // Add event listener to remove button
+                        const removeBtn = fieldDiv.querySelector('.remove-team-member-btn');
+                        removeBtn.addEventListener('click', function() {
+                            teamMembersFields.removeChild(fieldDiv);
+                            window.teamMemberCount--;
+                        });
+                    });
+                }
+            }
+            
+            // Fix for mobile menu
+            function setupMobileMenu() {
+                const mobileMenuButton = document.getElementById('mobileMenuButton');
+                const closeMenuButton = document.getElementById('closeMenuButton');
+                const mobileMenu = document.getElementById('mobileMenu');
+                
+                if (mobileMenuButton && closeMenuButton && mobileMenu) {
+                    mobileMenuButton.addEventListener('click', function() {
+                        mobileMenu.classList.remove('hidden');
+                    });
+                    
+                    closeMenuButton.addEventListener('click', function() {
+                        mobileMenu.classList.add('hidden');
+                    });
+                }
+            }
+            
+            // Initialize all fixes
+            setupStepNavigation();
+            setupFileUpload();
+            setupTeamMemberFields();
+            setupMobileMenu();
+            
+            // Fix form submission
+            const registrationForm = document.getElementById('registrationForm');
+            if (registrationForm) {
+                registrationForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    // Validate final step
+                    const paymentProof = document.getElementById('paymentProof');
+                    if (!paymentProof || paymentProof.files.length === 0) {
+                        showError('Please upload payment proof screenshot');
+                        return;
+                    }
+                    
+                    // Here you would normally submit the form
+                    // For now just show success message
+                    registrationForm.classList.add('hidden');
+                    const successMessage = document.getElementById('successMessage');
+                    if (successMessage) {
+                        successMessage.classList.remove('hidden');
+                        
+                        // Set confirmation details
+                        const email = document.getElementById('email').value;
+                        const confirmationEmail = document.getElementById('confirmationEmail');
+                        if (confirmationEmail) {
+                            confirmationEmail.textContent = email;
+                        }
+                        
+                        // Generate a random registration ID
+                        const registrationId = document.getElementById('registrationId');
+                        if (registrationId) {
+                            const randomId = 'INF-2025-' + Math.floor(1000 + Math.random() * 9000);
+                            registrationId.textContent = randomId;
+                        }
+                    }
+                });
+            }
+            
+            console.log("✅ All form fixes applied successfully");
         });
     </script>
 </body>

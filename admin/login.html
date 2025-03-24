@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login | Infinity 2025</title>
+    <title>Admin Login | INFINITY-2K25</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../public/styles/main.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="shortcut icon" href="../public/images/INFINITY GOLD LOGO 24.png" type="image/x-icon">
     <!-- Supabase client library -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../public/scripts/supabase-config.js"></script>
@@ -107,5 +108,124 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Supabase client
+            const supabase = window.supabaseConfig.initSupabase();
+            
+            // DOM elements
+            const loginForm = document.getElementById('loginForm');
+            const errorMessage = document.getElementById('errorMessage');
+            const loginText = document.getElementById('loginText');
+            const loginLoading = document.getElementById('loginLoading');
+            const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+            
+            // Check if already logged in
+            checkAuthStatus();
+            
+            // Handle login form submission
+            if (loginForm) {
+                loginForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+                    
+                    // Validation
+                    if (!email || !password) {
+                        showError('Email and password are required');
+                        return;
+                    }
+                    
+                    // Show loading state
+                    setLoading(true);
+                    
+                    try {
+                        // Attempt to sign in
+                        const { data, error } = await supabase.auth.signInWithPassword({
+                            email: email,
+                            password: password
+                        });
+                        
+                        if (error) throw error;
+                        
+                        // Redirect to admin dashboard
+                        window.location.href = 'dashboard.html';
+                    } catch (error) {
+                        console.error('Login error:', error);
+                        showError(error.message || 'Invalid email or password');
+                        setLoading(false);
+                    }
+                });
+            }
+            
+            // Handle forgot password
+            if (forgotPasswordLink) {
+                forgotPasswordLink.addEventListener('click', async function(e) {
+                    e.preventDefault();
+                    
+                    const email = document.getElementById('email').value;
+                    
+                    if (!email) {
+                        showError('Please enter your email address first');
+                        return;
+                    }
+                    
+                    try {
+                        setLoading(true);
+                        
+                        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                            redirectTo: window.location.origin + '/admin/reset-password.html',
+                        });
+                        
+                        if (error) throw error;
+                        
+                        // Show success message
+                        showError(`Password reset link sent to ${email}. Please check your inbox.`);
+                        errorMessage.classList.remove('bg-red-900', 'text-red-200');
+                        errorMessage.classList.add('bg-green-900', 'text-green-200');
+                    } catch (error) {
+                        console.error('Reset password error:', error);
+                        showError(error.message || 'Failed to send reset password email');
+                    } finally {
+                        setLoading(false);
+                    }
+                });
+            }
+            
+            // Check if already authenticated
+            async function checkAuthStatus() {
+                try {
+                    const { data: { session } } = await supabase.auth.getSession();
+                    
+                    if (session) {
+                        // Already logged in, redirect to dashboard
+                        window.location.href = 'dashboard.html';
+                    }
+                } catch (error) {
+                    console.error('Auth check error:', error);
+                }
+            }
+            
+            // Show error message
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.classList.remove('hidden');
+            }
+            
+            // Set loading state
+            function setLoading(isLoading) {
+                if (isLoading) {
+                    loginText.textContent = 'Signing in';
+                    loginLoading.classList.remove('hidden');
+                    loginForm.querySelector('button').disabled = true;
+                } else {
+                    loginText.textContent = 'Sign In';
+                    loginLoading.classList.add('hidden');
+                    loginForm.querySelector('button').disabled = false;
+                }
+            }
+        });
+    </script>
 </body>
 </html>

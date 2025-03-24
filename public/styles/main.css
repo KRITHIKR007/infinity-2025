@@ -738,3 +738,68 @@ input:checked + .toggle-switch::after {
         padding: var(--spacing-md);
     }
 }
+
+/* Event selection improvements */
+.event-card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.event-card.selected {
+    border: 2px solid #9333ea !important;
+    box-shadow: 0 0 10px rgba(147, 51, 234, 0.3);
+}
+
+.event-card.selected::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 25px 25px 0;
+    border-color: transparent #9333ea transparent transparent;
+}
+
+.event-checkbox {
+    position: relative;
+    cursor: pointer;
+    z-index: 5;
+}
+
+.event-checkbox-input:checked + span {
+    background-color: #9333ea;
+    border-color: #9333ea;
+}
+
+.event-checkbox-input:checked + span::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 12px;
+}
+
+.event-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Fix for iOS and Safari */
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Improved form steps display */
+.form-step {
+    display: none;
+}
+
+.form-step.active {
+    display: block;
+}

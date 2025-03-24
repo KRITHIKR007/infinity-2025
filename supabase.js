@@ -39,13 +39,14 @@ function getSupabaseClient() {
 // For ES module environments
 export { getSupabaseClient as supabase };
 
-// For script tag environments
+// For script tag environments - initialize immediately
 if (typeof window !== 'undefined') {
   window.getSupabaseClient = getSupabaseClient;
   
-  // Initialize immediately if both dependencies are available
+  // Initialize immediately if available
   if (typeof createClient === 'function') {
     window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    console.log('Supabase client initialized globally');
   }
 }
 

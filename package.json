@@ -9,7 +9,8 @@
     "dev": "nodemon index.js",
     "migrate": "node migrations/create_tables.js",
     "seed": "node migrations/seed_data.js",
-    "setup-db": "npm run migrate && npm run seed"
+    "setup-db": "npm run migrate && npm run seed",
+    "cleanup": "node scripts/cleanup.js"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.38.4",
