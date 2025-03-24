@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekphrastic - Poetry Writing Competition | Infinity 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../public/styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('../../public/images/posters/poetry.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .glass-effect {
+            background-color: rgba(31, 41, 55, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .event-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(147, 51, 234, 0.2);
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            margin-right: 1rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: #9333ea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #7e22ce;
+        }
+        
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-30 py-4">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="glass-effect rounded-xl py-4 px-6 flex justify-between items-center">
+                <a href="../../index.html" class="flex items-center space-x-2">
+                    <img src="../../public/images/INFINITY GOLD LOGO 24.png" alt="Infinity 2025 Logo" class="h-8 w-auto">
+                    <span class="text-xl font-bold gradient-text">Infinity 2025</span>
+                </a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="../../index.html" class="text-gray-300 hover:text-purple-400 transition-colors">Home</a>
+                    <a href="../tech.html" class="text-gray-300 hover:text-purple-400 transition-colors">Tech</a>
+                    <a href="../cultural.html" class="text-purple-400">Cultural</a>
+                    <a href="../contact.html" class="text-gray-300 hover:text-purple-400 transition-colors">Contact</a>
+                    <a href="../register.html" class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors">Register</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobileMenuButton" class="text-white">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed inset-0 z-40 hidden">
+        <div class="fixed inset-0 bg-black opacity-50"></div>
+        <div class="fixed right-0 top-0 h-full w-64 bg-gray-800 p-4">
+            <div class="flex justify-between items-center mb-8">
+                <span class="text-xl font-bold text-white">Menu</span>
+                <button id="closeMenuButton" class="text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex flex-col space-y-4">
+                <a href="../../index.html" class="text-gray-300 hover:text-purple-400 transition-colors">Home</a>
+                <a href="../tech.html" class="text-gray-300 hover:text-purple-400 transition-colors">Tech</a>
+                <a href="../cultural.html" class="text-purple-400">Cultural</a>
+                <a href="../contact.html" class="text-gray-300 hover:text-purple-400 transition-colors">Contact</a>
+                <a href="../register.html" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md transition-colors text-center">Register</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero-bg pt-32 pb-16 md:pb-24">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex flex-col items-center text-center">
+                <span class="px-3 py-1 text-sm font-medium rounded-full bg-purple-900 bg-opacity-50 text-purple-300 mb-4">
+                    Poetry Writing Competition
+                </span>
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">Ekphrastic</h1>
+                <p class="text-xl text-gray-300 max-w-2xl mb-8">
+                    A poetry competition where participants create a poem based on an artwork given at the event.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="../register.html" class="btn btn-primary">
+                        <i class="fas fa-user-plus mr-2"></i>Register Now
+                    </a>
+                    <a href="../cultural.html" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Events
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Details Section -->
+    <div class="py-16 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Main Content -->
+                <div class="md:col-span-2">
+                    <!-- Event Overview -->
+                    <div class="glass-effect p-8 rounded-lg mb-8">
+                        <h2 class="text-2xl font-bold text-white mb-4">Event Overview</h2>
+                        <p class="text-gray-300 mb-6">
+                            Ekphrastic is a unique poetry competition that explores the relationship between visual art and written word. Participants will receive an artwork at the beginning of the event and will be challenged to create a poem inspired by what they see, interpreting emotions, narratives, and symbolism present in the image.
+                        </p>
+                        <p class="text-gray-300">
+                            This event tests both creative writing skills and the ability to analyze visual media, translating visual sensations into poetic expression. It celebrates the intersection of different art forms and the unique perspective each poet brings to their interpretation.
+                        </p>
+                    </div>
+                    
+                    <!-- Rules & Guidelines -->
+                    <div class="glass-effect p-8 rounded-lg mb-8">
+                        <h2 class="text-2xl font-bold text-white mb-6">Rules & Guidelines</h2>
+                        <ul class="space-y-4 text-gray-300">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-400 mt-1 mr-3"></i>
+                                <span><strong>Artwork Provision:</strong> Participants will receive an artwork at the start of the event.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-400 mt-1 mr-3"></i>
+                                <span><strong>Poem Length:</strong> Maximum 20 lines.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-400 mt-1 mr-3"></i>
+                                <span><strong>Time Limit:</strong> 45 minutes to complete the poem.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-400 mt-1 mr-3"></i>
+                                <span><strong>Format:</strong> Poems can be in any style or form (free verse, sonnet, haiku, etc.).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-400 mt-1 mr-3"></i>
+                                <span><strong>Language:</strong> Poems must be written in English.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-400 mt-1 mr-3"></i>
+                                <span><strong>Judging Criteria:</strong> Creativity, interpretation of the artwork, emotional impact, and language proficiency.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-400 mt-1 mr-3"></i>
+                                <span><strong>Plagiarism:</strong> All submissions must be original. Plagiarism will result in disqualification.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-400 mt-1 mr-3"></i>
+                                <span>Participants must bring their own writing materials (pen, pencil, etc.).</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-purple-400 mt-1 mr-3"></i>
+                                <span>The decision of the judges will be final and binding.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Tips for Participants -->
+                    <div class="glass-effect p-8 rounded-lg">
+                        <h2 class="text-2xl font-bold text-white mb-6">Tips for Participants</h2>
+                        <ul class="space-y-4 text-gray-300">
+                            <li class="flex items-start">
+                                <i class="fas fa-lightbulb text-yellow-400 mt-1 mr-3"></i>
+                                <span>Take time to observe the artwork carefully, noting details, colors, composition, and the emotions it evokes.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-lightbulb text-yellow-400 mt-1 mr-3"></i>
+                                <span>Consider both what is explicitly shown in the artwork and what might be implied.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-lightbulb text-yellow-400 mt-1 mr-3"></i>
+                                <span>Use specific imagery and sensory details that connect directly to elements in the artwork.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-lightbulb text-yellow-400 mt-1 mr-3"></i>
+                                <span>Focus on crafting original metaphors and similes that expand on the visual elements.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-lightbulb text-yellow-400 mt-1 mr-3"></i>
+                                <span>Remember that an ekphrastic poem doesn't just describe the artwork—it responds to it, creating a dialogue between visual and written art.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Sidebar -->
+                <div>
+                    <!-- Event Details Card -->
+                    <div class="glass-effect p-6 rounded-lg mb-8">
+                        <h3 class="text-xl font-bold text-white mb-4">Event Details</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <div class="w-8 text-center text-purple-400 mr-3">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Venue</p>
+                                    <p class="text-white">FET</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-8 text-center text-purple-400 mr-3">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Date</p>
+                                    <p class="text-white">27th March 2025</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-8 text-center text-purple-400 mr-3">
+                                    <i class="fas fa-rupee-sign"></i>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Registration Fee</p>
+                                    <p class="text-white">₹99 per person</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-8 text-center text-purple-400 mr-3">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Participation</p>
+                                    <p class="text-white">Individual</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-8 text-center text-purple-400 mr-3">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Duration</p>
+                                    <p class="text-white">45 minutes</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Registration CTA -->
+                    <div class="glass-effect p-6 rounded-lg text-center mb-8">
+                        <h3 class="text-xl font-bold text-white mb-2">Ready to Express Yourself?</h3>
+                        <p class="text-gray-300 mb-4">Register now to showcase your poetic talents!</p>
+                        <a href="../register.html" class="btn btn-primary w-full">
+                            <i class="fas fa-user-plus mr-2"></i>Register Now
+                        </a>
+                    </div>
+                    
+                    <!-- Related Events -->
+                    <div class="glass-effect p-6 rounded-lg">
+                        <h3 class="text-xl font-bold text-white mb-4">Related Events</h3>
+                        <ul class="space-y-3">
+                            <li>
+                                <a href="tale-rewind.html" class="flex items-center p-2 rounded-lg hover:bg-gray-800 transition-colors">
+                                    <div class="w-12 h-12 rounded-lg overflow-hidden mr-3">
+                                        <img src="../../public/images/events/story.jpg" alt="Tale Rewind" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <p class="text-white font-medium">Tale Rewind</p>
+                                        <p class="text-gray-400 text-sm">Story Writing</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="just-a-minute.html" class="flex items-center p-2 rounded-lg hover:bg-gray-800 transition-colors">
+                                    <div class="w-12 h-12 rounded-lg overflow-hidden mr-3">
+                                        <img src="../../public/images/posters/just s minut.jpg" alt="Just A Minute" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <p class="text-white font-medium">Just A Minute</p>
+                                        <p class="text-gray-400 text-sm">Speech Competition</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="weave-your-story.html" class="flex items-center p-2 rounded-lg hover:bg-gray-800 transition-colors">
+                                    <div class="w-12 h-12 rounded-lg overflow-hidden mr-3">
+                                        <img src="../../public/images/events/historical-speech.jpg" alt="Weave Your Story" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <p class="text-white font-medium">Weave Your Story</p>
+                                        <p class="text-gray-400 text-sm">Historical Speech</p>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+                <div class="text-center">
+                    <a href="../../index.html" class="inline-block py-2 px-4 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors w-full">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                </div>
+                <div class="text-center">
+                    <a href="../tech.html" class="inline-block py-2 px-4 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors w-full">
+                        <i class="fas fa-microchip mr-2"></i>Tech Events
+                    </a>
+                </div>
+                <div class="text-center">
+                    <a href="../cultural.html" class="inline-block py-2 px-4 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors w-full">
+                        <i class="fas fa-music mr-2"></i>Cultural Events
+                    </a>
+                </div>
+                <div class="text-center">
+                    <a href="../register.html" class="inline-block py-2 px-4 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors w-full">
+                        <i class="fas fa-user-plus mr-2"></i>Register
+                    </a>
+                </div>
+            </div>
+            
+            <div class="text-center mb-4">
+                <a href="../contact.html" class="inline-block py-2 px-8 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors">
+                    <i class="fas fa-envelope mr-2"></i>Contact Us
+                </a>
+            </div>
+            
+            <hr class="border-gray-800 my-6">
+
+            <div class="flex justify-center space-x-6 mb-6">
+                <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">
+                    <i class="fab fa-facebook-f text-xl"></i>
+                </a>
+                <a href="https://www.instagram.com/culturalclub.fet/?igsh=ZDJ5aHExd3YwOWs4#" target="_blank" class="text-gray-400 hover:text-purple-400 transition-colors">
+                    <i class="fab fa-instagram text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">
+                    <i class="fab fa-twitter text-xl"></i>
+                </a>
+            </div>
+            
+            <p class="text-center text-gray-400 mb-1">© 2025 Infinity. All rights reserved.</p>
+            <p class="text-center text-gray-500 text-sm">Organized by Faculty of Engineering and Technology, Jain (Deemed-to-be University), Bangalore</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuButton').addEventListener('click', function() {
+            document.getElementById('mobileMenu').classList.remove('hidden');
+        });
+        
+        document.getElementById('closeMenuButton').addEventListener('click', function() {
+            document.getElementById('mobileMenu').classList.add('hidden');
+        });
+    </script>
+</body>
+</html>

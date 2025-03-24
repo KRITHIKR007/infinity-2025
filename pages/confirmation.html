@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Confirmation | Infinity 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../public/styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Supabase client library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../public/scripts/supabase-config.js"></script>
+    <style>
+        .glass-effect {
+            background-color: rgba(31, 41, 55, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: #9333ea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #7e22ce;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-30 py-4">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="glass-effect rounded-xl py-4 px-6 flex justify-between items-center">
+                <a href="../index.html" class="flex items-center space-x-2">
+                    <img src="../public/images/INFINITY GOLD LOGO 24.png" alt="INFINITY-2K25 Logo" class="h-8 w-auto animate-float">
+                    <span class="text-xl font-bold gradient-text">INFINITY-2K25</span>
+                </a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="../index.html" class="text-gray-300 hover:text-purple-400 transition-colors">Home</a>
+                    <a href="tech.html" class="text-gray-300 hover:text-purple-400 transition-colors">Tech</a>
+                    <a href="cultural.html" class="text-gray-300 hover:text-purple-400 transition-colors">Cultural</a>
+                    <a href="contact.html" class="text-gray-300 hover:text-purple-400 transition-colors">Contact</a>
+                    <a href="register.html" class="text-gray-300 hover:text-purple-400 transition-colors">Register</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobileMenuButton" class="text-white">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed inset-0 z-40 hidden">
+        <div class="fixed inset-0 bg-black opacity-50"></div>
+        <div class="fixed right-0 top-0 h-full w-64 bg-gray-800 p-4">
+            <div class="flex justify-between items-center mb-8">
+                <span class="text-xl font-bold text-white">Menu</span>
+                <button id="closeMenuButton" class="text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex flex-col space-y-4">
+                <a href="../index.html" class="text-gray-300 hover:text-purple-400 transition-colors">Home</a>
+                <a href="tech.html" class="text-gray-300 hover:text-purple-400 transition-colors">Tech</a>
+                <a href="cultural.html" class="text-gray-300 hover:text-purple-400 transition-colors">Cultural</a>
+                <a href="contact.html" class="text-gray-300 hover:text-purple-400 transition-colors">Contact</a>
+                <a href="register.html" class="text-gray-300 hover:text-purple-400 transition-colors">Register</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirmation Section -->
+    <div class="pt-32 pb-16">
+        <div class="max-w-4xl mx-auto px-4">
+            <!-- Loading State -->
+            <div id="loadingState" class="glass-effect p-8 rounded-lg text-center">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500 mb-4"></div>
+                <p class="text-white text-lg">Loading your registration details...</p>
+            </div>
+            
+            <!-- Error State -->
+            <div id="errorState" class="glass-effect p-8 rounded-lg text-center hidden">
+                <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-exclamation-triangle text-white text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-white mb-2">Oops, something went wrong</h2>
+                <p class="text-gray-300 mb-6" id="errorMessage">We couldn't find your registration details.</p>
+                <a href="register.html" class="btn btn-primary">
+                    Go to Registration Page
+                </a>
+            </div>
+            
+            <!-- Confirmation Details -->
+            <div id="confirmationDetails" class="hidden">
+                <div class="glass-effect p-8 rounded-lg text-center mb-6">
+                    <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-check text-white text-2xl"></i>
+                    </div>
+                    <h1 class="text-3xl font-bold text-white mb-2">Registration Confirmed!</h1>
+                    <p class="text-xl text-gray-300">Your spot at INFINITY-2K25 is secured.</p>
+                </div>
+                
+                <!-- Registration Details -->
+                <div class="glass-effect rounded-lg p-6 mb-6">
+                    <h2 class="text-xl font-semibold text-purple-400 mb-4">Registration Details</h2>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <p class="text-gray-400 text-sm">Name</p>
+                            <p class="text-white font-medium" id="participantName">Loading...</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Email</p>
+                            <p class="text-white font-medium" id="participantEmail">Loading...</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">University/College</p>
+                            <p class="text-white font-medium" id="participantUniversity">Loading...</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Phone</p>
+                            <p class="text-white font-medium" id="participantPhone">Loading...</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Registration ID</p>
+                            <p class="text-white font-medium" id="registrationId">Loading...</p>
+                        </div>
+                        <div>
+                            <p class="text-gray-400 text-sm">Registration Date</p>
+                            <p class="text-white font-medium" id="registrationDate">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Events Details -->
+                <div class="glass-effect rounded-lg p-6 mb-6">
+                    <h2 class="text-xl font-semibold text-purple-400 mb-4">Event Details</h2>
+                    
+                    <div id="selectedEventsList" class="space-y-3 mb-4">
+                        <!-- Selected events will be listed here -->
+                        <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 flex justify-between items-center">
+                            <div>
+                                <h3 class="text-white font-medium">Loading events...</h3>
+                                <p class="text-gray-400 text-sm">Please wait</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex justify-between items-center bg-gray-800 bg-opacity-50 p-4 rounded-lg">
+                        <span class="text-white font-medium">Total Amount:</span>
+                        <span class="text-xl font-bold text-purple-400" id="totalAmount">₹0</span>
+                    </div>
+                </div>
+                
+                <!-- Payment Details -->
+                <div class="glass-effect rounded-lg p-6 mb-6">
+                    <h2 class="text-xl font-semibold text-purple-400 mb-4">Payment Details</h2>
+                    
+                    <div class="mb-4">
+                        <p class="text-gray-400 text-sm">Payment Method</p>
+                        <p class="text-white font-medium" id="paymentMethod">Loading...</p>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <p class="text-gray-400 text-sm">Payment Status</p>
+                        <span id="paymentStatus" class="px-3 py-1 rounded-full text-sm font-medium">Loading...</span>
+                    </div>
+                    
+                    <div id="venuePaymentInfo" class="hidden">
+                        <div class="bg-yellow-900 bg-opacity-30 text-yellow-300 p-4 rounded-lg">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Please pay at the venue on the day of the event. Make sure to carry your registration ID.
+                        </div>
+                    </div>
+                    
+                    <div id="qrPaymentInfo" class="hidden">
+                        <div class="bg-green-900 bg-opacity-30 text-green-300 p-4 rounded-lg">
+                            <i class="fas fa-check-circle mr-2"></i>
+                            Your payment has been received. We'll review it shortly and update the status.
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Next Steps -->
+                <div class="glass-effect rounded-lg p-6 text-center">
+                    <h2 class="text-xl font-semibold text-purple-400 mb-4">Next Steps</h2>
+                    
+                    <p class="text-gray-300 mb-4">Save your registration details. You'll need your registration ID during check-in.</p>
+                    
+                    <div class="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-3">
+                        <button id="downloadConfirmationBtn" class="btn btn-primary">
+                            <i class="fas fa-download mr-2"></i> Download Confirmation
+                        </button>
+                        <button id="shareDetailsBtn" class="btn bg-blue-600 text-white hover:bg-blue-700">
+                            <i class="fas fa-share-alt mr-2"></i> Share Details
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 py-8">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-8">
+                <p class="text-white mb-2">Questions? Contact us at</p>
+                <a href="mailto:infinity@jainuniversity.ac.in" class="text-purple-400 hover:text-purple-300 transition-colors">
+                    infinity@jainuniversity.ac.in
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize Supabase client
+            const supabase = window.supabaseConfig.initSupabase();
+            
+            // DOM Elements
+            const loadingState = document.getElementById('loadingState');
+            const errorState = document.getElementById('errorState');
+            const confirmationDetails = document.getElementById('confirmationDetails');
+            const errorMessage = document.getElementById('errorMessage');
+            const mobileMenuButton = document.getElementById('mobileMenuButton');
+            const closeMenuButton = document.getElementById('closeMenuButton');
+            const mobileMenu = document.getElementById('mobileMenu');
+            
+            // Mobile menu toggle
+            if (mobileMenuButton && closeMenuButton && mobileMenu) {
+                mobileMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.remove('hidden');
+                });
+                
+                closeMenuButton.addEventListener('click', function() {
+                    mobileMenu.classList.add('hidden');
+                });
+            }
+            
+            // Get URL parameters to retrieve registration data
+            const urlParams = new URLSearchParams(window.location.search);
+            const registrationId = urlParams.get('id');
+            
+            if (!registrationId) {
+                showError('No registration ID provided');
+                return;
+            }
+            
+            // Fetch registration details
+            fetchRegistrationDetails(registrationId);
+            
+            // Fetch registration details from Supabase
+            async function fetchRegistrationDetails(id) {
+                try {
+                    // Get registration data
+                    const { data: registration, error } = await supabase
+                        .from('registrations')
+                        .select('*')
+                        .eq('id', id)
+                        .single();
+                        
+                    if (error) throw error;
+                    
+                    if (!registration) {
+                        throw new Error('Registration not found');
+                    }
+                    
+                    // Get selected events
+                    const { data: selectedEvents, error: eventsError } = await supabase
+                        .from('selected_events')
+                        .select('event_id')
+                        .eq('registration_id', id);
+                        
+                    if (eventsError) throw eventsError;
+                    
+                    // Get team members if applicable
+                    const { data: teamMembers, error: teamError } = await supabase
+                        .from('team_members')
+                        .select('*')
+                        .eq('registration_id', id)
+                        .order('member_number', { ascending: true });
+                        
+                    if (teamError) throw teamError;
+                    
+                    // Update UI with fetched data
+                    updateUI(registration, selectedEvents, teamMembers);
+                    
+                } catch (error) {
+                    console.error('Error fetching registration details:', error);
+                    showError(error.message || 'Failed to load registration details');
+                }
+            }
+            
+            // Update UI with registration data
+            function updateUI(registration, selectedEvents, teamMembers) {
+                // Hide loading state, show confirmation details
+                loadingState.classList.add('hidden');
+                confirmationDetails.classList.remove('hidden');
+                
+                // Update basic details
+                document.getElementById('participantName').textContent = registration.name;
+                document.getElementById('participantEmail').textContent = registration.email;
+                document.getElementById('participantPhone').textContent = registration.phone;
+                document.getElementById('participantUniversity').textContent = registration.university;
+                document.getElementById('registrationId').textContent = registration.id;
+                document.getElementById('registrationDate').textContent = formatDate(registration.created_at);
+                document.getElementById('totalAmount').textContent = `₹${registration.total_amount}`;
+                document.getElementById('paymentMethod').textContent = registration.payment_method === 'qr' ? 'QR Payment' : 'Pay at Venue';
+                
+                // Update payment status
+                const paymentStatus = document.getElementById('paymentStatus');
+                if (registration.payment_status === 'pending') {
+                    paymentStatus.textContent = 'Pending';
+                    paymentStatus.className = 'px-3 py-1 rounded-full text-sm font-medium bg-yellow-900 bg-opacity-50 text-yellow-300';
+                } else if (registration.payment_status === 'completed') {
+                    paymentStatus.textContent = 'Completed';
+                    paymentStatus.className = 'px-3 py-1 rounded-full text-sm font-medium bg-green-900 bg-opacity-50 text-green-300';
+                } else if (registration.payment_status === 'rejected') {
+                    paymentStatus.textContent = 'Rejected';
+                    paymentStatus.className = 'px-3 py-1 rounded-full text-sm font-medium bg-red-900 bg-opacity-50 text-red-300';
+                }
+                
+                // Show appropriate payment info
+                if (registration.payment_method === 'venue') {
+                    document.getElementById('venuePaymentInfo').classList.remove('hidden');
+                } else {
+                    document.getElementById('qrPaymentInfo').classList.remove('hidden');
+                }
+                
+                // Update selected events list
+                const selectedEventsList = document.getElementById('selectedEventsList');
+                if (selectedEvents && selectedEvents.length > 0) {
+                    // We'll need to fetch the event details for each selected event
+                    // For now, just show the event IDs
+                    let eventsHtml = '';
+                    
+                    selectedEvents.forEach(event => {
+                        eventsHtml += `
+                            <div class="bg-gray-800 bg-opacity-50 rounded-lg p-3 flex justify-between items-center">
+                                <div>
+                                    <h3 class="text-white font-medium">${event.event_id}</h3>
+                                    <p class="text-gray-400 text-sm">${registration.category} Event</p>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    selectedEventsList.innerHTML = eventsHtml;
+                } else {
+                    selectedEventsList.innerHTML = '<p class="text-gray-400">No events selected</p>';
+                }
+                
+                // Set up download button
+                document.getElementById('downloadConfirmationBtn').addEventListener('click', function() {
+                    generatePDF(registration, selectedEvents, teamMembers);
+                });
+                
+                // Set up share button
+                document.getElementById('shareDetailsBtn').addEventListener('click', function() {
+                    shareRegistrationDetails(registration);
+                });
+            }
+            
+            // Show error state
+            function showError(message) {
+                loadingState.classList.add('hidden');
+                errorState.classList.remove('hidden');
+                errorMessage.textContent = message;
+            }
+            
+            // Format date for display
+            function formatDate(dateString) {
+                return new Date(dateString).toLocaleString('en-US', {
+                    weekday: 'long',
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            }
+            
+            // Generate PDF for download
+            function generatePDF(registration, selectedEvents, teamMembers) {
+                // This would typically use a PDF generation library like jsPDF
+                // For now, we'll just alert
+                alert('PDF download functionality will be implemented here');
+                
+                // Example of what this might look like:
+                // const doc = new jsPDF();
+                // doc.text('Registration Confirmation', 20, 20);
+                // doc.text(`Registration ID: ${registration.id}`, 20, 30);
+                // doc.save(`INFINITY-2025-Registration-${registration.id}.pdf`);
+            }
+            
+            // Share registration details
+            function shareRegistrationDetails(registration) {
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'INFINITY-2025 Registration',
+                        text: `I've registered for INFINITY-2025! My registration ID is ${registration.id}`,
+                        url: window.location.href
+                    })
+                    .catch(error => console.error('Error sharing:', error));
+                } else {
+                    // Fallback for browsers that don't support Web Share API
+                    const shareUrl = `mailto:?subject=INFINITY-2025 Registration&body=I've registered for INFINITY-2025! My registration ID is ${registration.id}. Check it out at ${window.location.href}`;
+                    window.open(shareUrl);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

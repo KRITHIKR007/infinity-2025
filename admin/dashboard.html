@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Infinity 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../public/styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Supabase client library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../public/scripts/supabase-config.js"></script>
+    <style>
+        .glass-effect {
+            background-color: rgba(31, 41, 55, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: #9333ea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #7e22ce;
+        }
+        
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 min-h-screen">
+    <!-- Admin Sidebar -->
+    <aside class="fixed left-0 top-0 h-full w-64 bg-gray-800 p-4 z-10">
+        <div class="mb-8">
+            <a href="../index.html" class="flex items-center space-x-2">
+                <img src="../public/images/INFINITY GOLD LOGO 24.png" alt="INFINITY-2K25 Logo" class="h-8 w-auto">
+                <span class="text-xl font-bold text-white">ADMIN PANEL</span>
+            </a>
+        </div>
+        
+        <nav class="space-y-2">
+            <a href="dashboard.html" class="flex items-center space-x-2 p-3 rounded-lg bg-purple-800 text-white">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="registrations.html" class="flex items-center space-x-2 p-3 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-users"></i>
+                <span>Registrations</span>
+            </a>
+            <a href="events.html" class="flex items-center space-x-2 p-3 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Events</span>
+            </a>
+            <a href="payments.html" class="flex items-center space-x-2 p-3 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-money-bill-wave"></i>
+                <span>Payments</span>
+            </a>
+            <a href="settings.html" class="flex items-center space-x-2 p-3 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors">
+                <i class="fas fa-cog"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+        
+        <div class="absolute bottom-4 left-0 w-full px-4">
+            <button id="logoutBtn" class="flex items-center space-x-2 p-3 rounded-lg text-gray-300 hover:bg-gray-700 transition-colors w-full">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="ml-64 p-6">
+        <!-- Header -->
+        <header class="mb-6 flex justify-between items-center">
+            <div>
+                <h1 class="text-2xl font-bold text-white">Dashboard</h1>
+                <p class="text-gray-400">Welcome to the Infinity 2025 admin panel</p>
+            </div>
+            
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-300" id="currentDate">Loading...</span>
+                <div class="flex items-center space-x-2">
+                    <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center">
+                        <span class="text-white font-medium" id="userInitials">AD</span>
+                    </div>
+                    <span class="text-white" id="userName">Admin</span>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Dashboard Content -->
+        <div class="space-y-6">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="glass-effect p-6 rounded-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-gray-300 font-medium">Total Registrations</h3>
+                        <div class="w-10 h-10 rounded-lg bg-purple-900 bg-opacity-50 flex items-center justify-center">
+                            <i class="fas fa-users text-purple-400"></i>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold text-white" id="totalRegistrationsCount">0</p>
+                    <p class="text-gray-400 text-sm mt-2" id="registrationsChange">Loading...</p>
+                </div>
+                
+                <div class="glass-effect p-6 rounded-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-gray-300 font-medium">Tech Events</h3>
+                        <div class="w-10 h-10 rounded-lg bg-blue-900 bg-opacity-50 flex items-center justify-center">
+                            <i class="fas fa-microchip text-blue-400"></i>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold text-white" id="techRegistrationsCount">0</p>
+                    <p class="text-gray-400 text-sm mt-2">Registrations in technical events</p>
+                </div>
+                
+                <div class="glass-effect p-6 rounded-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-gray-300 font-medium">Cultural Events</h3>
+                        <div class="w-10 h-10 rounded-lg bg-pink-900 bg-opacity-50 flex items-center justify-center">
+                            <i class="fas fa-music text-pink-400"></i>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold text-white" id="culturalRegistrationsCount">0</p>
+                    <p class="text-gray-400 text-sm mt-2">Registrations in cultural events</p>
+                </div>
+                
+                <div class="glass-effect p-6 rounded-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="text-gray-300 font-medium">Total Revenue</h3>
+                        <div class="w-10 h-10 rounded-lg bg-green-900 bg-opacity-50 flex items-center justify-center">
+                            <i class="fas fa-rupee-sign text-green-400"></i>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold text-white" id="totalRevenue">₹0</p>
+                    <p class="text-gray-400 text-sm mt-2" id="revenueChange">Loading...</p>
+                </div>
+            </div>
+            
+            <!-- Pending Payments -->
+            <div class="glass-effect p-6 rounded-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-white">Pending Payments</h2>
+                    <a href="registrations.html?filter=pending" class="text-purple-400 hover:text-purple-300 transition-colors">
+                        View All <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="text-gray-400 text-sm uppercase">
+                            <tr>
+                                <th class="px-4 py-3">Name</th>
+                                <th class="px-4 py-3">Event</th>
+                                <th class="px-4 py-3">Amount</th>
+                                <th class="px-4 py-3">Date</th>
+                                <th class="px-4 py-3 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pendingPaymentsTable" class="text-white">
+                            <tr>
+                                <td colspan="5" class="px-4 py-6 text-center text-gray-400">
+                                    <i class="fas fa-spinner fa-spin mr-2"></i> Loading pending payments...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Recent Registrations -->
+            <div class="glass-effect p-6 rounded-lg">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-xl font-bold text-white">Recent Registrations</h2>
+                    <a href="registrations.html" class="text-purple-400 hover:text-purple-300 transition-colors">
+                        View All <i class="fas fa-arrow-right ml-1"></i>
+                    </a>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left">
+                        <thead class="text-gray-400 text-sm uppercase">
+                            <tr>
+                                <th class="px-4 py-3">Name</th>
+                                <th class="px-4 py-3">University</th>
+                                <th class="px-4 py-3">Event</th>
+                                <th class="px-4 py-3">Amount</th>
+                                <th class="px-4 py-3">Status</th>
+                                <th class="px-4 py-3 text-right">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recentRegistrationsTable" class="text-white">
+                            <tr>
+                                <td colspan="6" class="px-4 py-6 text-center text-gray-400">
+                                    <i class="fas fa-spinner fa-spin mr-2"></i> Loading recent registrations...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Registration Details Modal (Hidden by default) -->
+    <div id="registrationModal" class="fixed inset-0 flex items-center justify-center z-50 hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-75" id="modalOverlay"></div>
+        
+        <div class="glass-effect rounded-lg w-full max-w-3xl max-h-[90vh] overflow-auto relative z-10">
+            <div class="p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-xl font-bold text-white" id="modalTitle">Registration Details</h3>
+                    <button id="closeModalBtn" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times text-lg"></i>
+                    </button>
+                </div>
+                
+                <div id="modalLoading" class="py-8 flex justify-center">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
+                </div>
+                
+                <div id="registrationDetails" class="hidden">
+                    <!-- Registration details will be populated here -->
+                </div>
+                
+                <div class="flex justify-end mt-6 space-x-3">
+                    <button id="cancelModalBtn" class="btn btn-secondary">
+                        Close
+                    </button>
+                    <div id="statusActionButtons" class="space-x-3 hidden">
+                        <!-- Action buttons will be added here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Initialize Supabase client
+            const supabase = window.supabaseConfig.initSupabase();
+            
+            // Check if user is logged in
+            const { data: { session }, error } = await supabase.auth.getSession();
+            
+            if (error || !session) {
+                // Redirect to login page
+                window.location.href = 'login.html';
+                return;
+            }
+            
+            // DOM Elements
+            const currentDateEl = document.getElementById('currentDate');
+            const userInitialsEl = document.getElementById('userInitials');
+            const userNameEl = document.getElementById('userName');
+            const totalRegistrationsCountEl = document.getElementById('totalRegistrationsCount');
+            const registrationsChangeEl = document.getElementById('registrationsChange');
+            const techRegistrationsCountEl = document.getElementById('techRegistrationsCount');
+            const culturalRegistrationsCountEl = document.getElementById('culturalRegistrationsCount');
+            const totalRevenueEl = document.getElementById('totalRevenue');
+            const revenueChangeEl = document.getElementById('revenueChange');
+            const pendingPaymentsTableEl = document.getElementById('pendingPaymentsTable');
+            const recentRegistrationsTableEl = document.getElementById('recentRegistrationsTable');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const registrationModal = document.getElementById('registrationModal');
+            const modalOverlay = document.getElementById('modalOverlay');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const cancelModalBtn = document.getElementById('cancelModalBtn');
+            const registrationDetails = document.getElementById('registrationDetails');
+            const modalLoading = document.getElementById('modalLoading');
+            
+            // Set current date
+            currentDateEl.textContent = new Date().toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            
+            // Set user information
+            if (session.user) {
+                const { user } = session;
+                userNameEl.textContent = user.email.split('@')[0];
+                userInitialsEl.textContent = getInitials(user.email.split('@')[0]);
+            }
+            
+            // Load dashboard data
+            loadDashboardStats();
+            loadPendingPayments();
+            loadRecentRegistrations();
+            
+            // Event listeners
+            logoutBtn.addEventListener('click', async function() {
+                await supabase.auth.signOut();
+                window.location.href = 'login.html';
+            });
+            
+            if (closeModalBtn && cancelModalBtn && modalOverlay) {
+                closeModalBtn.addEventListener('click', closeModal);
+                cancelModalBtn.addEventListener('click', closeModal);
+                modalOverlay.addEventListener('click', closeModal);
+            }
+            
+            // Load dashboard statistics
+            async function loadDashboardStats() {
+                try {
+                    // Get total registrations count
+                    const { count: totalCount, error: totalError } = await supabase
+                        .from('registrations')
+                        .select('*', { count: 'exact', head: true });
+                        
+                    if (totalError) throw totalError;
+                    
+                    // Get tech registrations count
+                    const { count: techCount, error: techError } = await supabase
+                        .from('registrations')
+                        .select('*', { count: 'exact', head: true })
+                        .eq('category', 'tech');
+                        
+                    if (techError) throw techError;
+                    
+                    // Get cultural registrations count
+                    const { count: culturalCount, error: culturalError } = await supabase
+                        .from('registrations')
+                        .select('*', { count: 'exact', head: true })
+                        .eq('category', 'cultural');
+                        
+                    if (culturalError) throw culturalError;
+                    
+                    // Get total revenue
+                    const { data: revenueData, error: revenueError } = await supabase
+                        .from('registrations')
+                        .select('total_amount');
+                        
+                    if (revenueError) throw revenueError;
+                    
+                    const totalRevenue = revenueData.reduce((sum, registration) => sum + registration.total_amount, 0);
+                    
+                    // Update UI
+                    totalRegistrationsCountEl.textContent = totalCount || 0;
+                    techRegistrationsCountEl.textContent = techCount || 0;
+                    culturalRegistrationsCountEl.textContent = culturalCount || 0;
+                    totalRevenueEl.textContent = `₹${totalRevenue}`;
+                    
+                    // Set change indicators (this would typically compare to previous period)
+                    registrationsChangeEl.innerHTML = '<span class="text-green-400">↑ 12%</span> from last week';
+                    revenueChangeEl.innerHTML = '<span class="text-green-400">↑ 8%</span> from last week';
+                    
+                } catch (error) {
+                    console.error('Error loading dashboard stats:', error);
+                }
+            }
+            
+            // Load pending payments
+            async function loadPendingPayments() {
+                try {
+                    const { data, error } = await supabase
+                        .from('registrations')
+                        .select('*')
+                        .eq('payment_status', 'pending')
+                        .order('created_at', { ascending: false })
+                        .limit(5);
+                        
+                    if (error) throw error;
+                    
+                    if (data && data.length > 0) {
+                        let tableHtml = '';
+                        
+                        data.forEach(registration => {
+                            tableHtml += `
+                                <tr class="border-t border-gray-800">
+                                    <td class="px-4 py-3">${registration.name}</td>
+                                    <td class="px-4 py-3">${registration.category}</td>
+                                    <td class="px-4 py-3">₹${registration.total_amount}</td>
+                                    <td class="px-4 py-3">${formatDate(registration.created_at)}</td>
+                                    <td class="px-4 py-3 text-right">
+                                        <button class="text-purple-400 hover:text-purple-300 transition-colors mr-2" onclick="viewRegistration('${registration.id}')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="text-green-400 hover:text-green-300 transition-colors mr-2" onclick="approvePayment('${registration.id}')">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+                                        <button class="text-red-400 hover:text-red-300 transition-colors" onclick="rejectPayment('${registration.id}')">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        
+                        pendingPaymentsTableEl.innerHTML = tableHtml;
+                    } else {
+                        pendingPaymentsTableEl.innerHTML = `
+                            <tr>
+                                <td colspan="5" class="px-4 py-6 text-center text-gray-400">
+                                    No pending payments found
+                                </td>
+                            </tr>
+                        `;
+                    }
+                } catch (error) {
+                    console.error('Error loading pending payments:', error);
+                    pendingPaymentsTableEl.innerHTML = `
+                        <tr>
+                            <td colspan="5" class="px-4 py-6 text-center text-gray-400">
+                                Error loading pending payments
+                            </td>
+                        </tr>
+                    `;
+                }
+            }
+            
+            // Load recent registrations
+            async function loadRecentRegistrations() {
+                try {
+                    const { data, error } = await supabase
+                        .from('registrations')
+                        .select('*')
+                        .order('created_at', { ascending: false })
+                        .limit(5);
+                        
+                    if (error) throw error;
+                    
+                    if (data && data.length > 0) {
+                        let tableHtml = '';
+                        
+                        data.forEach(registration => {
+                            tableHtml += `
+                                <tr class="border-t border-gray-800">
+                                    <td class="px-4 py-3">${registration.name}</td>
+                                    <td class="px-4 py-3">${registration.university}</td>
+                                    <td class="px-4 py-3">${registration.category}</td>
+                                    <td class="px-4 py-3">₹${registration.total_amount}</td>
+                                    <td class="px-4 py-3">
+                                        <span class="px-2 py-1 rounded-full text-xs ${getStatusClass(registration.payment_status)}">
+                                            ${capitalizeFirstLetter(registration.payment_status)}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-3 text-right">
+                                        <button class="text-purple-400 hover:text-purple-300 transition-colors" onclick="viewRegistration('${registration.id}')">
+                                            <i class="fas fa-eye"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        
+                        recentRegistrationsTableEl.innerHTML = tableHtml;
+                    } else {
+                        recentRegistrationsTableEl.innerHTML = `
+                            <tr>
+                                <td colspan="6" class="px-4 py-6 text-center text-gray-400">
+                                    No registrations found
+                                </td>
+                            </tr>
+                        `;
+                    }
+                } catch (error) {
+                    console.error('Error loading recent registrations:', error);
+                    recentRegistrationsTableEl.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="px-4 py-6 text-center text-gray-400">
+                                Error loading registrations
+                            </td>
+                        </tr>
+                    `;
+                }
+            }
+            
+            // View registration details
+            window.viewRegistration = async function(registrationId) {
+                try {
+                    // Show modal
+                    registrationModal.classList.remove('hidden');
+                    modalLoading.classList.remove('hidden');
+                    registrationDetails.classList.add('hidden');
+                    
+                    // Fetch registration details
+                    const { data: registration, error } = await supabase
+                        .from('registrations')
+                        .select('*')
+                        .eq('id', registrationId)
+                        .single();
+                        
+                    if (error) throw error;
+                    
+                    // Fetch selected events
+                    const { data: selectedEvents, error: eventsError } = await supabase
+                        .from('selected_events')
+                        .select('event_id')
+                        .eq('registration_id', registrationId);
+                        
+                    if (eventsError) throw eventsError;
+                    
+                    // Fetch team members
+                    const { data: teamMembers, error: teamError } = await supabase
+                        .from('team_members')
+                        .select('*')
+                        .eq('registration_id', registrationId)
+                        .order('member_number', { ascending: true });
+                        
+                    if (teamError) throw teamError;
+                    
+                    // Update modal content
+                    let detailsHtml = `
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p class="text-gray-400 text-sm">Registration ID</p>
+                                    <p class="text-white">${registration.id}</p>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Status</p>
+                                    <span class="px-2 py-1 rounded-full text-xs ${getStatusClass(registration.payment_status)}">
+                                        ${capitalizeFirstLetter(registration.payment_status)}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="border-t border-gray-700 pt-4">
+                                <h4 class="text-lg font-medium text-white mb-2">Personal Information</h4>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-gray-400 text-sm">Name</p>
+                                        <p class="text-white">${registration.name}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-sm">Email</p>
+                                        <p class="text-white">${registration.email}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-sm">Phone</p>
+                                        <p class="text-white">${registration.phone}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-sm">University</p>
+                                        <p class="text-white">${registration.university}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="border-t border-gray-700 pt-4">
+                                <h4 class="text-lg font-medium text-white mb-2">Registration Details</h4>
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <p class="text-gray-400 text-sm">Category</p>
+                                        <p class="text-white">${registration.category}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-sm">Total Amount</p>
+                                        <p class="text-white">₹${registration.total_amount}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-sm">Registration Date</p>
+                                        <p class="text-white">${formatDate(registration.created_at)}</p>
+                                    </div>
+                                    <div>
+                                        <p class="text-gray-400 text-sm">Payment Method</p>
+                                        <p class="text-white">${registration.payment_method === 'qr' ? 'QR Payment' : 'Pay at Venue'}</p>
+                                    </div>
+                                </div>
+                            </div>
+                    `;
+                    
+                    // Add team details if available
+                    if (registration.team_name || (teamMembers && teamMembers.length > 0)) {
+                        detailsHtml += `
+                            <div class="border-t border-gray-700 pt-4">
+                                <h4 class="text-lg font-medium text-white mb-2">Team Details</h4>
+                                <div class="mb-2">
+                                    <p class="text-gray-400 text-sm">Team Name</p>
+                                    <p class="text-white">${registration.team_name || 'N/A'}</p>
+                                </div>
+                        `;
+                        
+                        if (teamMembers && teamMembers.length > 0) {
+                            detailsHtml += `
+                                <p class="text-gray-400 text-sm mb-1">Team Members</p>
+                                <ul class="space-y-1 text-white">
+                            `;
+                            
+                            teamMembers.forEach(member => {
+                                detailsHtml += `<li>${member.name}</li>`;
+                            });
+                            
+                            detailsHtml += `</ul>`;
+                        }
+                        
+                        detailsHtml += `</div>`;
+                    }
+                    
+                    // Add selected events
+                    if (selectedEvents && selectedEvents.length > 0) {
+                        detailsHtml += `
+                            <div class="border-t border-gray-700 pt-4">
+                                <h4 class="text-lg font-medium text-white mb-2">Selected Events</h4>
+                                <ul class="space-y-1 text-white">
+                        `;
+                        
+                        selectedEvents.forEach(event => {
+                            detailsHtml += `<li>${event.event_id}</li>`;
+                        });
+                        
+                        detailsHtml += `</ul></div>`;
+                    }
+                    
+                    // Close the main div
+                    detailsHtml += `</div>`;
+                    
+                    // Update modal content
+                    registrationDetails.innerHTML = detailsHtml;
+                    
+                    // Show action buttons based on payment status
+                    const statusActionButtons = document.getElementById('statusActionButtons');
+                    
+                    if (statusActionButtons) {
+                        if (registration.payment_status === 'pending') {
+                            statusActionButtons.classList.remove('hidden');
+                            statusActionButtons.innerHTML = `
+                                <button class="btn bg-green-600 text-white hover:bg-green-700 transition-colors" onclick="approvePayment('${registration.id}')">
+                                    <i class="fas fa-check mr-2"></i>Approve Payment
+                                </button>
+                                <button class="btn bg-red-600 text-white hover:bg-red-700 transition-colors" onclick="rejectPayment('${registration.id}')">
+                                    <i class="fas fa-times mr-2"></i>Reject Payment
+                                </button>
+                            `;
+                        } else {
+                            statusActionButtons.classList.add('hidden');
+                        }
+                    }
+                    
+                    // Hide loading, show details
+                    modalLoading.classList.add('hidden');
+                    registrationDetails.classList.remove('hidden');
+                    
+                } catch (error) {
+                    console.error('Error fetching registration details:', error);
+                    
+                    // Show error message
+                    registrationDetails.innerHTML = `
+                        <div class="text-center py-8">
+                            <div class="w-16 h-16 bg-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-exclamation-triangle text-white text-2xl"></i>
+                            </div>
+                            <h3 class="text-xl font-bold text-white mb-2">Error</h3>
+                            <p class="text-gray-300">Failed to load registration details.</p>
+                        </div>
+                    `;
+                    
+                    modalLoading.classList.add('hidden');
+                    registrationDetails.classList.remove('hidden');
+                }
+            };
+            
+            // Approve payment
+            window.approvePayment = async function(registrationId) {
+                try {
+                    const { error } = await supabase
+                        .from('registrations')
+                        .update({ payment_status: 'completed' })
+                        .eq('id', registrationId);
+                        
+                    if (error) throw error;
+                    
+                    // Close modal
+                    closeModal();
+                    
+                    // Refresh data
+                    loadDashboardStats();
+                    loadPendingPayments();
+                    loadRecentRegistrations();
+                    
+                    // Show success message
+                    alert('Payment approved successfully!');
+                    
+                } catch (error) {
+                    console.error('Error approving payment:', error);
+                    alert('Error approving payment. Please try again.');
+                }
+            };
+            
+            // Reject payment
+            window.rejectPayment = async function(registrationId) {
+                try {
+                    const { error } = await supabase
+                        .from('registrations')
+                        .update({ payment_status: 'rejected' })
+                        .eq('id', registrationId);
+                        
+                    if (error) throw error;
+                    
+                    // Close modal
+                    closeModal();
+                    
+                    // Refresh data
+                    loadDashboardStats();
+                    loadPendingPayments();
+                    loadRecentRegistrations();
+                    
+                    // Show success message
+                    alert('Payment rejected successfully!');
+                    
+                } catch (error) {
+                    console.error('Error rejecting payment:', error);
+                    alert('Error rejecting payment. Please try again.');
+                }
+            };
+            
+            // Close modal
+            function closeModal() {
+                registrationModal.classList.add('hidden');
+            }
+            
+            // Helper functions
+            function getInitials(name) {
+                return name
+                    .split(' ')
+                    .map(part => part[0])
+                    .join('')
+                    .toUpperCase();
+            }
+            
+            function capitalizeFirstLetter(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
+            }
+            
+            function getStatusClass(status) {
+                switch (status) {
+                    case 'completed':
+                        return 'bg-green-900 bg-opacity-50 text-green-300';
+                    case 'pending':
+                        return 'bg-yellow-900 bg-opacity-50 text-yellow-300';
+                    case 'rejected':
+                        return 'bg-red-900 bg-opacity-50 text-red-300';
+                    default:
+                        return 'bg-gray-900 bg-opacity-50 text-gray-300';
+                }
+            }
+            
+            function formatDate(dateString) {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    year: 'numeric'
+                });
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"="width=device-width, initial-scale=1.0">
+    <title>Cultural Events - Infinity 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1"></script>
+    <link rel="stylesheet" href="../public/styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .floating-navbar {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 95%;
+            max-width: 1280px;
+            z-index: 100;
+            border-radius: 1rem;
+            animation: navbarFloat 2s ease-in-out infinite alternate;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        @keyframes navbarFloat {
+            from {
+                transform: translateX(-50%) translateY(0px);
+            }
+            to {
+                transform: translateX(-50%) translateY(5px);
+            }
+        }
+        
+        .glass-effect {
+            border-radius: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-30 py-4">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <a href="../index.html" class="flex items-center space-x-2">
+                        <img src="../public/images/INFINITY GOLD LOGO 24.png" alt="INFINITY-2K25 Logo" class="h-8 w-auto animate-float">
+                        <span class="text-xl font-bold gradient-text">INFINITY-2K25</span>
+                    </a>
+                </div>
+                <div class="hidden md:flex space-x-8">
+                    <a href="../index.html#about" class="text-gray-300 hover:text-purple-400 transition-colors">About</a>
+                    <a href="cultural.html" class="text-purple-400">Cultural</a>
+                    <a href="tech.html" class="text-gray-300 hover:text-purple-400 transition-colors">Tech</a>
+                    <a href="contact.html" class="text-gray-300 hover:text-purple-400 transition-colors">Contact</a>
+                <a href="../admin/login.html" class="inline-block py-2 px-6 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors">
+                    <i class="fas fa-lock mr-2"></i>Admin
+                </a>
+                    <a href="register.html" class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors">Register</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="pt-32 pb-20 bg-[url('../public/images/hero-bg.jpeg')] bg-cover bg-fixed">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center">
+                <h1 class="text-5xl font-bold gradient-text mb-4">Cultural Events</h1>
+                <p class="text-xl text-gray-300 mb-8">INFINITY-2K25 | Faculty of Engineering and Technology, Jain (Deemed-to-be University), Bangalore</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Events Grid -->
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Step Sync (Solo Dance) -->
+                <div class="glass-effect rounded-lg overflow-hidden">
+                    <div class="relative h-48">
+                        <img src="../public/images/posters/stepsynk.jpg" alt="Step Sync" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4">
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Step Sync</h3>
+                        <p class="text-gray-300 text-sm mb-4">A solo dance competition where participants showcase their dance skills, expressions, and stage presence.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-purple-400">Individual</span>
+                            <span class="text-sm text-purple-400">₹199 per person</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <a href="events/step-sync.html" class="inline-block py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">View Details</a>
+                            <a href="register.html" class="inline-block py-2 px-4 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors">Register</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nritya Vedika (Group Dance) -->
+                <div class="glass-effect rounded-lg overflow-hidden">
+                    <div class="relative h-48">
+                        <img src="../public/images/posters/britya veduka.jpg" alt="Nritya Vedika" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4">
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Nritya Vedika</h3>
+                        <p class="text-gray-300 text-sm mb-4">A group dance competition that brings teams together to perform synchronized and energetic routines in Indo-Western styles.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-purple-400">6-15 members</span>
+                            <span class="text-sm text-purple-400">₹799 per team</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <a href="events/nritya-vedika.html" class="inline-block py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">View Details</a>
+                            <a href="register.html" class="inline-block py-2 px-4 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors">Register</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Echoes & Strings (Solo Singing) -->
+                <div class="glass-effect rounded-lg overflow-hidden">
+                    <div class="relative h-48">
+                        <img src="../public/images/posters/echoed strangel.jpg" alt="Echoes & Strings" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4">
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Echoes & Strings</h3>
+                        <p class="text-gray-300 text-sm mb-4">A solo singing competition where participants display their vocal skills across different genres.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-purple-400">Individual</span>
+                            <span class="text-sm text-purple-400">₹299 per person</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <a href="events/echoes-strings.html" class="inline-block py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">View Details</a>
+                            <a href="register.html" class="inline-block py-2 px-4 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors">Register</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Resonance (Group Music) -->
+                <div class="glass-effect rounded-lg overflow-hidden">
+                    <div class="relative h-48">
+                        <img src="../public/images/posters/resonance.jpg" alt="Resonance" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4">
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Resonance</h3>
+                        <p class="text-gray-300 text-sm mb-4">A group & duet singing competition featuring live performances with various musical styles.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-purple-400">2-6 members</span>
+                            <span class="text-sm text-purple-400">₹499 per team</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <a href="events/resonance.html" class="inline-block py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">View Details</a>
+                            <a href="register.html" class="inline-block py-2 px-4 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors">Register</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cosmic Drift (Fashion Show) -->
+                <div class="glass-effect rounded-lg overflow-hidden">
+                    <div class="relative h-48">
+                        <img src="../public/images/posters/cosmic drift.jpg" alt="Cosmic Drift" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4">
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Cosmic Drift</h3>
+                        <p class="text-gray-300 text-sm mb-4">A sci-fi-themed fashion show where teams showcase unique and futuristic designs with creativity and elegance.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-sm text-purple-400">10-14 members</span>
+                            <span class="text-sm text-purple-400">₹1499 per team</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <a href="events/cosmic-drift.html" class="inline-block py-2 px-4 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">View Details</a>
+                            <a href="register.html" class="inline-block py-2 px-4 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors">Register</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ekphrastic Poetry -->
+                <div class="glass-effect rounded-lg overflow-hidden">
+                    <div class="relative h-48">
+                        <img src="../public/images/posters/poetry.jpg" alt="Ekphrastic" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <span class="px-2 py-1 text-xs rounded-full bg-purple-900 bg-opacity-50 text-purple-300">
+                                Poetry Writing
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Ekphrastic</h3>
+                        <p class="text-gray-300 text-sm mb-4">A poetry competition where participants create a poem based on an artwork given at the event.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-map-marker-alt mr-1"></i> FET
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-calendar-alt mr-1"></i> 27th March
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-rupee-sign mr-1"></i> 99
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <a href="events/ekphrastic.html" class="btn btn-primary flex-1">
+                                <i class="fas fa-eye mr-2"></i>View Details
+                            </a>
+                            <a href="register.html" class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tale Rewind -->
+                <div class="glass-effect rounded-lg overflow-hidden">
+                    <div class="relative h-48">
+                        <img src="../public/images/posters/tale rewind.jpg" alt="Tale Rewind" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <span class="px-2 py-1 text-xs rounded-full bg-purple-900 bg-opacity-50 text-purple-300">
+                                Story Writing
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Tale Rewind</h3>
+                        <p class="text-gray-300 text-sm mb-4">A storytelling event where participants must write a story leading up to a predefined ending.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-map-marker-alt mr-1"></i> FET
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-calendar-alt mr-1"></i> 27th March
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-rupee-sign mr-1"></i> 99
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <a href="events/tale-rewind.html" class="btn btn-primary flex-1">
+                                <i class="fas fa-eye mr-2"></i>View Details
+                            </a>
+                            <a href="register.html" class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Just A Minute -->
+                <div class="glass-effect rounded-lg overflow-hidden">
+                    <div class="relative h-48">
+                        <img src="../public/images/posters/just s minut.jpg" alt="Just A Minute" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <span class="px-2 py-1 text-xs rounded-full bg-purple-900 bg-opacity-50 text-purple-300">
+                                Speech Competition
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Just A Minute</h3>
+                        <p class="text-gray-300 text-sm mb-4">A fast-paced speech event where participants must speak fluently for a minute on a given topic.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-map-marker-alt mr-1"></i> FET
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-calendar-alt mr-1"></i> 27th March
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-rupee-sign mr-1"></i> 99
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <a href="events/just-a-minute.html" class="btn btn-primary flex-1">
+                                <i class="fas fa-eye mr-2"></i>View Details
+                            </a>
+                            <a href="register.html" class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Wave Your Story -->
+                <div class="glass-effect rounded-lg overflow-hidden">
+                    <div class="relative h-48">
+                        <img src="../public/images/posters/wave the falge.jpg" alt="Weave Your Story" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <span class="px-2 py-1 text-xs rounded-full bg-purple-900 bg-opacity-50 text-purple-300">
+                                Historical Speech
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Weave Your Story</h3>
+                        <p class="text-gray-300 text-sm mb-4">Historical speech recital event where participants recreate famous speeches from history.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-map-marker-alt mr-1"></i> FET
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-calendar-alt mr-1"></i> 27th March
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-rupee-sign mr-1"></i> 99
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <a href="events/weave-your-story.html" class="btn btn-primary flex-1">
+                                <i class="fas fa-eye mr-2"></i>View Details
+                            </a>
+                            <a href="register.html" class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Short Film Making -->
+                <div class="glass-effect rounded-lg overflow-hidden">
+                    <div class="relative h-48">
+                        <img src="../public/images/posters/ather frames.jpg" alt="Aether Frames" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <span class="px-2 py-1 text-xs rounded-full bg-purple-900 bg-opacity-50 text-purple-300">
+                                Short Film Making
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Aether Frames</h3>
+                        <p class="text-gray-300 text-sm mb-4">A short film making competition showcasing creativity, storytelling, and cinematography.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-map-marker-alt mr-1"></i> TBA
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-calendar-alt mr-1"></i> 27th March
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-rupee-sign mr-1"></i> 499
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <a href="events/aether-frames.html" class="btn btn-primary flex-1">
+                                <i class="fas fa-eye mr-2"></i>View Details
+                            </a>
+                            <a href="register.html" class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Capture the Moment / Motion Fusion -->
+                <div class="glass-effect rounded-lg overflow-hidden">
+                    <div class="relative h-48">
+                        <img src="../public/images/posters/capture the moment.jpg" alt="Capture the Moment" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <span class="px-2 py-1 text-xs rounded-full bg-purple-900 bg-opacity-50 text-purple-300">
+                                Photography & Videography
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Capture the Moment</h3>
+                        <p class="text-gray-300 text-sm mb-4">Photography and videography competition capturing the essence of Infinity 2025.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-map-marker-alt mr-1"></i> TBA
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-calendar-alt mr-1"></i> 27th March
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-rupee-sign mr-1"></i> 100-150
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <a href="events/capture-the-moment.html" class="btn btn-primary flex-1">
+                                <i class="fas fa-eye mr-2"></i>View Details
+                            </a>
+                            <a href="register.html" class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Motion Fusion (Videography Competition) -->
+                <div class="glass-effect rounded-lg overflow-hidden">
+                    <div class="relative h-48">
+                        <img src="../public/images/posters/motion fusion.jpg" alt="Motion Fusion" class="w-full h-full object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                        <div class="absolute bottom-4 left-4">
+                            <span class="px-2 py-1 text-xs rounded-full bg-purple-900 bg-opacity-50 text-purple-300">
+                                Videography
+                            </span>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-white mb-2">Motion Fusion</h3>
+                        <p class="text-gray-300 text-sm mb-4">Specialized videography competition focusing on motion, transitions, and visual storytelling.</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-map-marker-alt mr-1"></i> TBA
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-calendar-alt mr-1"></i> 27th March
+                            </div>
+                            <div class="text-sm text-gray-400">
+                                <i class="fas fa-rupee-sign mr-1"></i> 99
+                            </div>
+                        </div>
+                        <div class="flex justify-between">
+                            <a href="events/motion-fusion.html" class="btn btn-primary flex-1">
+                                <i class="fas fa-eye mr-2"></i>View Details
+                            </a>
+                            <a href="register.html" class="btn btn-secondary">
+                                <i class="fas fa-user-plus"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA Section -->
+    <div class="py-16 bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 text-center">
+            <h2 class="text-3xl font-bold text-white mb-6">Ready to Showcase Your Talent?</h2>
+            <p class="text-xl text-gray-300 mb-8">Join us at Infinity 2025 and be part of an unforgettable cultural experience!</p>
+            <a href="register.html" class="px-8 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors inline-flex items-center">
+                <i class="fas fa-user-plus mr-2"></i>Register Now
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 py-8">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+                <div class="text-center">
+                    <a href="../index.html" class="inline-block py-2 px-4 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors w-full">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                </div>
+                <div class="text-center">
+                    <a href="tech.html" class="inline-block py-2 px-4 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors w-full">
+                        <i class="fas fa-microchip mr-2"></i>Tech Events
+                    </a>
+                </div>
+                <div class="text-center">
+                    <a href="cultural.html" class="inline-block py-2 px-4 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors w-full">
+                        <i class="fas fa-music mr-2"></i>Cultural Events
+                    </a>
+                </div>
+                <div class="text-center">
+                    <a href="register.html" class="inline-block py-2 px-4 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors w-full">
+                        <i class="fas fa-user-plus mr-2"></i>Register
+                    </a>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap justify-center gap-4 mb-6">
+                <a href="contact.html" class="inline-block py-2 px-6 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors">
+                    <i class="fas fa-envelope mr-2"></i>Contact Us
+                </a>
+                <a href="../admin/login.html" class="inline-block py-2 px-6 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors">
+                    <i class="fas fa-lock mr-2"></i>Admin
+                </a>
+            </div>
+            
+            <hr class="border-gray-800 my-6">
+            
+            <div class="flex justify-center space-x-6 mb-6">
+                <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">
+                    <i class="fab fa-facebook-f text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">
+                    <i class="fab fa-twitter text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">
+                    <i class="fab fa-instagram text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">
+                    <i class="fab fa-linkedin-in text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">
+                    <i class="fab fa-youtube text-xl"></i>
+                </a>
+            </div>
+            <p class="text-center text-gray-400 mb-2">&copy; 2024 INFINITY-2K25. All rights reserved.</p>
+            <p class="text-center text-gray-500 text-sm">Organized by Faculty of Engineering and Technology, Jain (Deemed-to-be University), Bangalore</p>
+            <p class="text-center text-gray-400 mb-2">Contact: Technical Events - Dhrub Kumar Jha (+91 8296019911) | Cultural Events - Rohan (+91 9353074448)</p>
+        </div>
+    </footer>
+</body>
+</html>

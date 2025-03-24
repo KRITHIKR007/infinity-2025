@@ -1,0 +1,31 @@
+{
+  "name": "infinity-2k25",
+  "version": "1.0.0",
+  "description": "Infinity 2025 Event Registration System",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "migrate": "node migrations/create_tables.js",
+    "seed": "node migrations/seed_data.js",
+    "setup-db": "npm run migrate && npm run seed"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.4",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "private": true,
+  "author": "Krithik R",
+  "license": "MIT"
+}

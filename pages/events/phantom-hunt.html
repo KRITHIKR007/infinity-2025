@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phantom Hunt - Cybersecurity Challenge | Infinity 2025</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../../public/styles/main.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .hero-bg {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7)), url('../../public/images/posters/phnatum hunt.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        
+        .glass-effect {
+            background-color: rgba(31, 41, 55, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .event-icon {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(147, 51, 234, 0.2);
+            border: 1px solid rgba(147, 51, 234, 0.3);
+            margin-right: 1rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 1.5rem;
+            font-weight: 500;
+            border-radius: 0.375rem;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background-color: #9333ea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #7e22ce;
+        }
+        
+        .btn-secondary {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gray-900 min-h-screen">
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-30 py-4">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="glass-effect rounded-xl py-4 px-6 flex justify-between items-center">
+                <a href="../../index.html" class="flex items-center space-x-2">
+                    <img src="../../public/images/INFINITY GOLD LOGO 24.png" alt="Infinity 2025 Logo" class="h-8 w-auto">
+                    <span class="text-xl font-bold gradient-text">Infinity 2025</span>
+                </a>
+                <div class="hidden md:flex space-x-8">
+                    <a href="../../index.html" class="text-gray-300 hover:text-purple-400 transition-colors">Home</a>
+                    <a href="../tech.html" class="text-purple-400">Tech</a>
+                    <a href="../cultural.html" class="text-gray-300 hover:text-purple-400 transition-colors">Cultural</a>
+                    <a href="../contact.html" class="text-gray-300 hover:text-purple-400 transition-colors">Contact</a>
+                    <a href="../register.html" class="bg-purple-600 text-white px-4 py-2 rounded-md hover:bg-purple-700 transition-colors">Register</a>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobileMenuButton" class="text-white">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobileMenu" class="fixed inset-0 z-40 hidden">
+        <div class="fixed inset-0 bg-black opacity-50"></div>
+        <div class="fixed right-0 top-0 h-full w-64 bg-gray-800 p-4">
+            <div class="flex justify-between items-center mb-8">
+                <span class="text-xl font-bold text-white">Menu</span>
+                <button id="closeMenuButton" class="text-white">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="flex flex-col space-y-4">
+                <a href="../../index.html" class="text-gray-300 hover:text-purple-400 transition-colors">Home</a>
+                <a href="../tech.html" class="text-purple-400">Tech</a>
+                <a href="../cultural.html" class="text-gray-300 hover:text-purple-400 transition-colors">Cultural</a>
+                <a href="../contact.html" class="text-gray-300 hover:text-purple-400 transition-colors">Contact</a>
+                <a href="../register.html" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-md transition-colors text-center">Register</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero-bg pt-32 pb-16 md:pb-24">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex flex-col items-center text-center">
+                <span class="px-3 py-1 text-sm font-medium rounded-full bg-blue-900 bg-opacity-50 text-blue-300 mb-4">
+                    Cybersecurity Challenge
+                </span>
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-4">Phantom Hunt</h1>
+                <p class="text-xl text-gray-300 max-w-2xl mb-8">
+                    A cybersecurity challenge where teams solve puzzles, analyze network traffic, and use ethical hacking techniques to track a digital phantom.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4">
+                    <a href="../register.html" class="btn btn-primary">
+                        <i class="fas fa-user-plus mr-2"></i>Register Now
+                    </a>
+                    <a href="../tech.html" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Events
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Details Section -->
+    <div class="py-16 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Main Content -->
+                <div class="md:col-span-2">
+                    <!-- Event Overview -->
+                    <div class="glass-effect p-8 rounded-lg mb-8">
+                        <h2 class="text-2xl font-bold text-white mb-4">Event Overview</h2>
+                        <p class="text-gray-300 mb-6">
+                            Phantom Hunt is an immersive cybersecurity challenge that puts participants in the role of security professionals tasked with tracking down a digital intruder. Teams will solve puzzles, analyze network traffic, and employ ethical hacking techniques to identify and neutralize the phantom hacker.
+                        </p>
+                        <p class="text-gray-300">
+                            This multi-phase competition will test participants' knowledge of cybersecurity concepts, problem-solving abilities, and technical skills in a realistic scenario. From decoding encrypted messages to analyzing suspicious network packets, teams will face increasingly complex challenges as they follow the digital trail of the phantom.
+                        </p>
+                    </div>
+                    
+                    <!-- Competition Structure -->
+                    <div class="glass-effect p-8 rounded-lg mb-8">
+                        <h2 class="text-2xl font-bold text-white mb-6">Competition Structure</h2>
+                        <div class="space-y-6">
+                            <div class="glass-effect p-5 rounded-lg">
+                                <div class="flex items-center mb-3">
+                                    <div class="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold mr-3">1</div>
+                                    <h3 class="text-xl font-bold text-white">Phase 1: Digital Breadcrumbs</h3>
+                                </div>
+                                <p class="text-gray-300">
+                                    Teams solve CTF-style challenges using QR codes, encrypted messages, and OSINT techniques to gather intelligence about the phantom hacker. Each clue leads to the next, requiring careful analysis and creative thinking.
+                                </p>
+                            </div>
+                            
+                            <div class="glass-effect p-5 rounded-lg">
+                                <div class="flex items-center mb-3">
+                                    <div class="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold mr-3">2</div>
+                                    <h3 class="text-xl font-bold text-white">Phase 2: Network Infiltration</h3>
+                                </div>
+                                <p class="text-gray-300">
+                                    Teams analyze intercepted packets, trace malicious activities, and bypass security measures in a controlled environment. This phase tests technical skills and problem-solving abilities under pressure.
+                                </p>
+                            </div>
+                            
+                            <div class="glass-effect p-5 rounded-lg">
+                                <div class="flex items-center mb-3">
+                                    <div class="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold mr-3">3</div>
+                                    <h3 class="text-xl font-bold text-white">Phase 3: Final Showdown</h3>
+                                </div>
+                                <p class="text-gray-300">
+                                    The top-performing teams advance to the final challenge, where they face advanced cybersecurity puzzles against the clock. This phase combines all previously tested skills into a comprehensive security challenge.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Rules & Guidelines -->
+                    <div class="glass-effect p-8 rounded-lg mb-8">
+                        <h2 class="text-2xl font-bold text-white mb-6">Rules & Guidelines</h2>
+                        <ul class="space-y-4 text-gray-300">
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-blue-400 mt-1 mr-3"></i>
+                                <span><strong>Team Size:</strong> 4-5 members per team.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-blue-400 mt-1 mr-3"></i>
+                                <span><strong>Team Composition:</strong> At least one member should have basic networking and cybersecurity knowledge.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-blue-400 mt-1 mr-3"></i>
+                                <span><strong>Allowed Tools:</strong> Wireshark, Cisco Packet Tracer, and OSINT resources. All tools must be approved beforehand.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-blue-400 mt-1 mr-3"></i>
+                                <span><strong>Prohibited Actions:</strong> Sharing answers with other teams, attacking competition infrastructure, or using unauthorized external resources.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-blue-400 mt-1 mr-3"></i>
+                                <span><strong>Equipment:</strong> Teams should bring their own laptops with required software pre-installed. Power outlets and internet will be provided.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fas fa-check-circle text-blue-400 mt-1 mr-3"></i>
+                                <span><strong>Ethics:</strong> All activities must follow ethical hacking principles. Any attempt at actual hacking will result in immediate disqualification.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Judging Criteria -->
+                    <div class="glass-effect p-8 rounded-lg mb-8">
+                        <h2 class="text-2xl font-bold text-white mb-6">Judging Criteria</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="glass-effect p-4 rounded-lg">
+                                <h3 class="text-lg font-semibold text-white mb-2">Accuracy (40%)</h3>
+                                <p class="text-gray-300">Correctness of solutions and findings</p>
+                            </div>
+                            <div class="glass-effect p-4 rounded-lg">
+                                <h3 class="text-lg font-semibold text-white mb-2">Efficiency (25%)</h3>
+                                <p class="text-gray-300">Time taken to solve challenges and approach used</p>
+                            </div>
+                            <div class="glass-effect p-4 rounded-lg">
+                                <h3 class="text-lg font-semibold text-white mb-2">Methodology (20%)</h3>
+                                <p class="text-gray-300">Systematic approach and documentation</p>
+                            </div>
+                            <div class="glass-effect p-4 rounded-lg">
+                                <h3 class="text-lg font-semibold text-white mb-2">Teamwork (15%)</h3>
+                                <p class="text-gray-300">Collaboration and role distribution</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Faculty Coordinators -->
+                    <div class="glass-effect p-8 rounded-lg">
+                        <h2 class="text-2xl font-bold text-white mb-6">Event Coordinators</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="flex items-center">
+                                <div class="event-icon">
+                                    <i class="fas fa-user-tie text-blue-400 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-white">Prof. Nishant</h3>
+                                    <p class="text-gray-400">Faculty Coordinator</p>
+                                    <p class="text-gray-400">
+                                        <i class="fas fa-phone-alt mr-2"></i>7098523614
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex items-center">
+                                <div class="event-icon">
+                                    <i class="fas fa-user-graduate text-blue-400 text-2xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold text-white">Chirag</h3>
+                                    <p class="text-gray-400">Student Coordinator</p>
+                                    <p class="text-gray-400">
+                                        <i class="fas fa-phone-alt mr-2"></i>9901037575
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sidebar -->
+                <div>
+                    <!-- Event Details Card -->
+                    <div class="glass-effect p-6 rounded-lg mb-8">
+                        <h3 class="text-xl font-bold text-white mb-4">Event Details</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <div class="w-8 text-center text-blue-400 mr-3">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Venue</p>
+                                    <p class="text-white">Room 116, FET</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-8 text-center text-blue-400 mr-3">
+                                    <i class="fas fa-calendar-alt"></i>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Date</p>
+                                    <p class="text-white">27th March 2025</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-8 text-center text-blue-400 mr-3">
+                                    <i class="fas fa-rupee-sign"></i>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Registration Fee</p>
+                                    <p class="text-white">₹500 per team</p>
+                                </div>
+                            </li>
+                            <li class="flex items-start">
+                                <div class="w-8 text-center text-blue-400 mr-3">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div>
+                                    <p class="text-gray-400 text-sm">Team Size</p>
+                                    <p class="text-white">4-5 members</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <!-- Registration CTA -->
+                    <div class="glass-effect p-6 rounded-lg text-center mb-8">
+                        <h3 class="text-xl font-bold text-white mb-2">Ready to Hunt the Phantom?</h3>
+                        <p class="text-gray-300 mb-4">Register your team now for this cybersecurity challenge!</p>
+                        <a href="../register.html" class="btn btn-primary w-full">
+                            <i class="fas fa-user-plus mr-2"></i>Register Now
+                        </a>
+                    </div>
+                    
+                    <!-- Related Events -->
+                    <div class="glass-effect p-6 rounded-lg">
+                        <h3 class="text-xl font-bold text-white mb-4">Other Tech Events</h3>
+                        <ul class="space-y-3">
+                            <li>
+                                <a href="syntax-scramble.html" class="flex items-center p-2 rounded-lg hover:bg-gray-800 transition-colors">
+                                    <div class="w-12 h-12 rounded-lg overflow-hidden mr-3">
+                                        <img src="../../public/images/posters/syntax scrambel.jpg" alt="Syntax Scramble" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <p class="text-white font-medium">Syntax Scramble</p>
+                                        <p class="text-gray-400 text-sm">Blind Coding Challenge</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="ctrl-z.html" class="flex items-center p-2 rounded-lg hover:bg-gray-800 transition-colors">
+                                    <div class="w-12 h-12 rounded-lg overflow-hidden mr-3">
+                                        <img src="../../public/images/posters/ctrl+z.jpg" alt="CTRL+Z" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <p class="text-white font-medium">CTRL+Z</p>
+                                        <p class="text-gray-400 text-sm">Debugging Competition</p>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="innovathon.html" class="flex items-center p-2 rounded-lg hover:bg-gray-800 transition-colors">
+                                    <div class="w-12 h-12 rounded-lg overflow-hidden mr-3">
+                                        <img src="../../public/images/posters/innovation.jpg" alt="Innovathon" class="w-full h-full object-cover">
+                                    </div>
+                                    <div>
+                                        <p class="text-white font-medium">Innovathon</p>
+                                        <p class="text-gray-400 text-sm">Innovation Challenge</p>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 border-t border-gray-800 py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+                <div class="text-center">
+                    <a href="../../index.html" class="inline-block py-2 px-4 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors w-full">
+                        <i class="fas fa-home mr-2"></i>Home
+                    </a>
+                </div>
+                <div class="text-center">
+                    <a href="../tech.html" class="inline-block py-2 px-4 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors w-full">
+                        <i class="fas fa-microchip mr-2"></i>Tech Events
+                    </a>
+                </div>
+                <div class="text-center">
+                    <a href="../cultural.html" class="inline-block py-2 px-4 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors w-full">
+                        <i class="fas fa-music mr-2"></i>Cultural Events
+                    </a>
+                </div>
+                <div class="text-center">
+                    <a href="../register.html" class="inline-block py-2 px-4 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors w-full">
+                        <i class="fas fa-user-plus mr-2"></i>Register
+                    </a>
+                </div>
+            </div>
+            
+            <div class="text-center mb-4">
+                <a href="../contact.html" class="inline-block py-2 px-8 rounded-lg glass-effect text-white hover:text-purple-400 transition-colors">
+                    <i class="fas fa-envelope mr-2"></i>Contact Us
+                </a>
+            </div>
+            
+            <hr class="border-gray-800 my-6">
+
+            <div class="flex justify-center space-x-6 mb-6">
+                <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">
+                    <i class="fab fa-facebook-f text-xl"></i>
+                </a>
+                <a href="https://www.instagram.com/culturalclub.fet/?igsh=ZDJ5aHExd3YwOWs4#" target="_blank" class="text-gray-400 hover:text-purple-400 transition-colors">
+                    <i class="fab fa-instagram text-xl"></i>
+                </a>
+                <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors">
+                    <i class="fab fa-twitter text-xl"></i>
+                </a>
+            </div>
+            
+            <p class="text-center text-gray-400 mb-1">© 2025 Infinity. All rights reserved.</p>
+            <p class="text-center text-gray-500 text-sm">Organized by Faculty of Engineering and Technology, Jain (Deemed-to-be University), Bangalore</p>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuButton').addEventListener('click', function() {
+            document.getElementById('mobileMenu').classList.remove('hidden');
+        });
+        
+        document.getElementById('closeMenuButton').addEventListener('click', function() {
+            document.getElementById('mobileMenu').classList.add('hidden');
+        });
+    </script>
+</body>
+</html>
