@@ -1,49 +1,68 @@
 #!/usr/bin/env node
 
 /**
- * Helper script for deploying to Vercel via CLI
- * Run with: node vercel-deploy.js
+ * Vercel Deployment Script
+ * This script runs during Vercel deployments to set up the database
  */
 
 const { execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-// Check if Vercel CLI is installed
-try {
-  execSync('vercel --version', { stdio: 'ignore' });
-  console.log('✅ Vercel CLI is installed');
-} catch (error) {
-  console.error('❌ Vercel CLI is not installed. Please install it with:');
-  console.error('npm install -g vercel');
+// Check if this is a Vercel build environment
+const isVercel = process.env.VERCEL === '1';
+
+// Function to log with timestamp
+function log(message) {
+  const timestamp = new Date().toISOString();
+  console.log(`[${timestamp}] ${message}`);
+}
+
+// Function to run a command
+function runCommand(command) {
+  log(`Running command: ${command}`);
+  try {
+    const output = execSync(command, { encoding: 'utf8' });
+    log(`Command output: ${output}`);
+    return true;
+  } catch (error) {
+    log(`Command failed: ${error.message}`);
+    return false;
+  }
+}
+
+// Main function to run deployment tasks
+async function deploy() {
+  log('Starting deployment tasks');
+  
+  if (!isVercel) {
+    log('Not running in Vercel environment, skipping deployment tasks');
+    return;
+  }
+  
+  // Check environment variables
+  if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
+    log('Supabase environment variables not set');
+  } else {
+    log('Supabase environment variables found');
+  }
+  
+  // Run database setup if SUPABASE_SERVICE_KEY is available
+  if (process.env.SUPABASE_SERVICE_KEY) {
+    log('SUPABASE_SERVICE_KEY found, running database setup');
+    runCommand('node supabase-setup.js');
+  } else {
+    log('SUPABASE_SERVICE_KEY not found, skipping database setup');
+  }
+  
+  log('Deployment tasks completed');
+}
+
+// Run the deployment
+deploy().catch(error => {
+  log(`Deployment error: ${error.message}`);
   process.exit(1);
-}
-
-// Check if .env file exists
-if (!fs.existsSync('.env')) {
-  console.log('⚠️ No .env file found. Creating one with Supabase credentials...');
-  
-  const envContent = `SUPABASE_URL=https://ceickbodqhwfhcpabfdq.supabase.co
-SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlaWNrYm9kcWh3ZmhjcGFiZmRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzMzU2MTgsImV4cCI6MjA1NzkxMTYxOH0.ZyTG1FkQzjQ0CySlyvkQEYPHWBbZJd--vsB_IqILuo8
-SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlaWNrYm9kcWh3ZmhjcGFiZmRxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc0MjMzNTYxOCwiZXhwIjoyMDU3OTExNjE4fQ.Hu0z65qQc3XfP4KsoBK50-HmOe5fxjlRRhEMQ9LsEJc`;
-  
-  fs.writeFileSync('.env', envContent);
-  console.log('✅ Created .env file with Supabase credentials');
-}
-
-console.log('🚀 Starting Vercel deployment...');
-
-// Run Vercel command
-try {
-  // For production deployment
-  execSync('vercel --prod', { stdio: 'inherit' });
-  
-  console.log('✅ Deployment initiated successfully!');
-  console.log('📝 Check your Vercel dashboard for deployment status and URL.');
-} catch (error) {
-  console.error('❌ Deployment failed:', error.message);
-  process.exit(1);
-}
+});
 
 module.exports = {
     async redirects() {

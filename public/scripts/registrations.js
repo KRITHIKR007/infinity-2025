@@ -1,5 +1,14 @@
-import { supabase, TABLES } from '../../supabase.js';
-import { PhotoService } from './services/photo-service.js';
+import { supabase } from '../../supabase.js';
+
+// Define table names constants
+const TABLES = {
+    REGISTRATIONS: 'registrations',
+    EVENTS: 'events',
+    PAYMENTS: 'payments',
+    STORAGE: {
+        PAYMENT_PROOFS: 'payment_proofs'
+    }
+};
 
 /**
  * Registrations module for handling registration-related operations
@@ -31,6 +40,7 @@ export const registrations = {
                 );
             }
             
+            // Apply sorting
             if (options.orderBy) {
                 query = query.order(options.orderBy.column, { 
                     ascending: options.orderBy.ascending 
@@ -114,21 +124,29 @@ export const registrations = {
             let paymentId = null;
             
             if (registrationData.paymentProof && registrationData.paymentMethod === 'qr') {
-                const uploadResult = await PhotoService.uploadPhoto(
-                    registrationData.paymentProof,
-                    'payment_proofs',
-                    'payment-proofs',
-                    true // Optimize the image
-                );
+                // Get the Supabase instance
+                const supabaseInstance = window.supabase || supabase;
                 
-                if (!uploadResult.success) {
-                    throw new Error(uploadResult.error || 'Failed to upload payment proof');
-                }
+                // Create a unique filename
+                const timestamp = new Date().getTime();
+                const filePath = `payment-proofs/${timestamp}-${registrationData.paymentProof.name.replace(/[^a-zA-Z0-9.]/g, '_')}`;
                 
-                paymentProofUrl = uploadResult.url;
+                // Upload the proof image
+                const { error: uploadError, data: uploadData } = await supabaseInstance.storage
+                    .from(TABLES.STORAGE.PAYMENT_PROOFS)
+                    .upload(filePath, registrationData.paymentProof);
+                    
+                if (uploadError) throw uploadError;
+                
+                // Get the public URL
+                const { data: urlData } = supabaseInstance.storage
+                    .from(TABLES.STORAGE.PAYMENT_PROOFS)
+                    .getPublicUrl(filePath);
+                    
+                paymentProofUrl = urlData.publicUrl;
                 
                 // Create payment record
-                const { data: paymentData, error: paymentError } = await supabase
+                const { data: paymentData, error: paymentError } = await supabaseInstance
                     .from(TABLES.PAYMENTS)
                     .insert([{
                         amount: registrationData.fee || 0,
@@ -136,7 +154,8 @@ export const registrations = {
                         status: 'pending',
                         payment_method: registrationData.paymentMethod,
                         proof_url: paymentProofUrl,
-                        proof_path: uploadResult.path,
+                        proof_path: filePath,
+                        transaction_id: registrationData.transactionId,
                         created_at: new Date().toISOString()
                     }])
                     .select();
@@ -146,6 +165,21 @@ export const registrations = {
                 paymentId = paymentData[0].id;
             }
             
+            // Ensure selected events is an array
+            const events = Array.isArray(registrationData.events) 
+                ? registrationData.events 
+                : (registrationData.selectedEvents || []);
+            
+            // Format event names as a string if it's an array
+            const eventName = Array.isArray(registrationData.eventNames) 
+                ? registrationData.eventNames.join(', ') 
+                : (registrationData.eventName || '');
+                
+            // Format team members if provided
+            const teamMembers = Array.isArray(registrationData.teamMembers) 
+                ? registrationData.teamMembers 
+                : [];
+                
             // Create registration record
             const { data, error } = await supabase
                 .from(TABLES.REGISTRATIONS)
@@ -155,26 +189,36 @@ export const registrations = {
                     email: registrationData.email,
                     phone: registrationData.phone,
                     university: registrationData.university,
-                    events: registrationData.events || [],
-                    event_name: registrationData.eventName || '',
-                    payment_status: registrationData.paymentMethod === 'qr' ? 'pending' : 'awaiting_payment',
+                    events: events,
+                    event_name: eventName,
+                    payment_status: 'pending',
                     payment_id: paymentId,
                     payment_proof_url: paymentProofUrl,
+                    transaction_id: registrationData.transactionId,
                     payment_method: registrationData.paymentMethod,
                     created_at: new Date().toISOString(),
-                    category: registrationData.category || '',
+                    category: registrationData.category || 'tech',
                     team_name: registrationData.teamName || null,
-                    team_members: JSON.stringify(registrationData.teamMembers || []),
-                    fee: registrationData.fee || 0
+                    team_members: teamMembers,
+                    fee: registrationData.fee || registrationData.totalFee || 0
                 }])
                 .select();
                 
             if (error) throw error;
             
-            return { data, error: null };
+            return { 
+                success: true, 
+                data: data[0], 
+                registrationId: registrationId,
+                error: null 
+            };
         } catch (error) {
             console.error('Error creating registration:', error);
-            return { data: null, error };
+            return { 
+                success: false, 
+                data: null, 
+                error: error.message || 'Failed to create registration' 
+            };
         }
     },
     
@@ -196,10 +240,10 @@ export const registrations = {
                 .select();
                 
             if (error) throw error;
-            return { data, error: null };
+            return { success: true, data, error: null };
         } catch (error) {
             console.error('Error updating payment status:', error);
-            return { data: null, error };
+            return { success: false, data: null, error: error.message };
         }
     },
     
@@ -217,10 +261,10 @@ export const registrations = {
                 .order('created_at', { ascending: false });
                 
             if (error) throw error;
-            return { data, error: null };
+            return { success: true, data, error: null };
         } catch (error) {
             console.error('Error fetching event registrations:', error);
-            return { data: null, error };
+            return { success: false, data: null, error: error.message };
         }
     },
     
@@ -275,3 +319,8 @@ export const registrations = {
         }
     }
 };
+
+// Make registrations available globally for non-module scripts
+if (typeof window !== 'undefined') {
+    window.registrationsModule = registrations;
+}

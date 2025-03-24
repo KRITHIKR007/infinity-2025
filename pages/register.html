@@ -808,6 +808,68 @@
                             </div>
                         </div>
                         
+                        <!-- Payment Options Section -->
+                        <div id="paymentOptionsSection" class="mt-8">
+                            <h3 class="text-xl font-semibold text-white mb-4">Payment Options</h3>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- UPI Option -->
+                                <div class="glass-effect p-6 rounded-lg">
+                                    <div class="flex items-center mb-4">
+                                        <input type="radio" id="upiPayment" name="paymentMethod" value="upi" class="h-4 w-4 text-purple-600" checked>
+                                        <label for="upiPayment" class="ml-2 text-white">UPI Payment</label>
+                                    </div>
+                                    <div class="flex flex-col items-center">
+                                        <img id="techQrCode" src="../public/images/qr-codes/tech-qr.png" alt="Tech Events QR Code" class="h-40 mb-4">
+                                        <img id="culturalQrCode" src="../public/images/qr-codes/cultural-qr.png" alt="Cultural Events QR Code" class="h-40 mb-4 hidden">
+                                        <p class="text-gray-300 text-center mb-2">Scan the QR code to pay</p>
+                                        <p class="text-white text-center font-semibold">
+                                            Amount: ₹<span id="qrPaymentAmount">0</span>
+                                        </p>
+                                        
+                                        <!-- Transaction ID Input -->
+                                        <div class="w-full mt-4">
+                                            <label for="transactionId" class="block text-gray-300 mb-1">Transaction/Reference Number*</label>
+                                            <input type="text" id="transactionId" name="transactionId" placeholder="Enter UPI transaction number" 
+                                                class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                            <p class="text-xs text-gray-400 mt-1">Please enter the transaction ID/reference number from your payment</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Manual Option -->
+                                <div class="glass-effect p-6 rounded-lg">
+                                    <div class="flex items-center mb-4">
+                                        <input type="radio" id="manualPayment" name="paymentMethod" value="manual" class="h-4 w-4 text-purple-600">
+                                        <label for="manualPayment" class="ml-2 text-white">Upload Payment Proof</label>
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <p class="text-gray-300 mb-4">Upload screenshot of your payment confirmation</p>
+                                        <p class="text-white font-semibold mb-4">
+                                            Amount: ₹<span id="culturalPaymentAmount">0</span>
+                                        </p>
+                                        <div class="mb-4">
+                                            <input type="file" id="paymentProof" name="paymentProof" accept="image/*" class="hidden">
+                                            <label for="paymentProof" class="flex flex-col items-center px-4 py-6 bg-gray-800 text-gray-300 rounded-lg border border-gray-700 border-dashed cursor-pointer hover:bg-gray-700">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                                </svg>
+                                                <span class="text-sm">Click to upload screenshot</span>
+                                            </label>
+                                        </div>
+                                        
+                                        <!-- Transaction ID Input for manual payment -->
+                                        <div class="w-full mt-2">
+                                            <label for="manualTransactionId" class="block text-gray-300 mb-1">Transaction/Reference Number*</label>
+                                            <input type="text" id="manualTransactionId" name="manualTransactionId" placeholder="Enter payment reference number" 
+                                                class="w-full bg-gray-800 border border-gray-700 rounded-md py-2 px-3 text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                                            <p class="text-xs text-gray-400 mt-1">Please enter the transaction reference number from your payment</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
                         <div class="flex justify-between">
                             <button type="button" id="step4PrevBtn" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left mr-2"></i> Previous
@@ -1714,7 +1776,6 @@
                     alert("Navigation error occurred. Please try refreshing the page.");
                 }
             }
-        });
     </script>
 
     <script>
@@ -2193,68 +2254,6 @@
                 
                 selectedEvents.forEach(eventId => {
                     const card = document.querySelector(`.event-card[data-event-id="${eventId}"]`);
-                    if (card) {
-                        const eventName = card.querySelector('h3').textContent;
-                        const eventFee = parseInt(card.dataset.fee, 10);
-                        totalFee += eventFee;
-                        
-                        eventsHtml += `
-                            <div class="flex justify-between items-center mb-2 pb-2 border-b border-gray-700">
-                                <span class="text-white">${eventName}</span>
-                                <span class="text-purple-400">₹${eventFee}</span>
-                            </div>
-                        `;
-                    }
-                });
-                
-                selectedEventsList.innerHTML = eventsHtml;
-                
-                // Update total amount
-                const totalAmount = document.getElementById('totalAmount');
-                if (totalAmount) {
-                    totalAmount.textContent = `₹${totalFee}`;
-                    
-                    // Also update payment amounts
-                    const techPaymentAmount = document.getElementById('techPaymentAmount');
-                    const culturalPaymentAmount = document.getElementById('culturalPaymentAmount');
-                    if (techPaymentAmount) techPaymentAmount.textContent = totalFee;
-                    if (culturalPaymentAmount) culturalPaymentAmount.textContent = totalFee;
-                }
-            }
-            
-            // Fix for file upload preview
-            function setupFileUpload() {
-                const paymentProof = document.getElementById('paymentProof');
-                const previewContainer = document.getElementById('previewContainer');
-                const previewImage = document.getElementById('previewImage');
-                const removeImageBtn = document.getElementById('removeImageBtn');
-                const uploadLabel = document.getElementById('uploadLabel');
-                
-                if (paymentProof && previewContainer && previewImage) {
-                    paymentProof.addEventListener('change', function(e) {
-                        if (this.files && this.files[0]) {
-                            const file = this.files[0];
-                            
-                            if (file.size > 5 * 1024 * 1024) { // 5MB limit
-                                showError('File size exceeds the maximum limit of 5MB');
-                                this.value = '';
-                                previewContainer.classList.add('hidden');
-                                return;
-                            }
-                            
-                            const reader = new FileReader();
-                            
-                            reader.onload = function(e) {
-                                previewImage.src = e.target.result;
-                                previewContainer.classList.remove('hidden');
-                                if (uploadLabel) uploadLabel.textContent = 'Change Payment Proof';
-                            };
-                            
-                            reader.readAsDataURL(file);
-                        }
-                    });
-                    
-                    if (removeImageBtn) {
                         removeImageBtn.addEventListener('click', function() {
                             paymentProof.value = '';
                             previewContainer.classList.add('hidden');
@@ -2306,6 +2305,7 @@
                     });
                 }
             }
+            }
             
             // Fix for mobile menu
             function setupMobileMenu() {
@@ -2325,7 +2325,7 @@
             }
             
             // Initialize all fixes
-            setupStepNavigation();
+            setupStepNavigation(),
             setupFileUpload();
             setupTeamMemberFields();
             setupMobileMenu();

@@ -1,7 +1,7 @@
 {
   "name": "infinity-2k25",
   "version": "1.0.0",
-  "description": "Infinity 2025 Event Registration System",
+  "description": "Infinity 2025 - Annual Technical and Cultural Fest",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -9,11 +9,13 @@
     "dev": "nodemon index.js",
     "migrate": "node migrations/create_tables.js",
     "seed": "node migrations/seed_data.js",
-    "setup-db": "npm run migrate && npm run seed",
-    "cleanup": "node scripts/cleanup.js"
+    "setup-db": "node supabase-setup.js",
+    "cleanup": "node scripts/cleanup.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "vercel-build": "node vercel-deploy.js"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.38.4",
+    "@supabase/supabase-js": "^2.39.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "compression": "^1.7.4",
@@ -24,8 +26,14 @@
     "nodemon": "^3.0.1"
   },
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=14.0.0"
   },
+  "keywords": [
+    "infinity",
+    "fest",
+    "technical",
+    "cultural"
+  ],
   "private": true,
   "author": "Krithik R",
   "license": "MIT"

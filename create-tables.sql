@@ -1,4 +1,3 @@
-
 -- Events Table
 CREATE TABLE IF NOT EXISTS events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -33,6 +32,7 @@ CREATE TABLE IF NOT EXISTS registrations (
   payment_status TEXT DEFAULT 'pending',
   payment_id UUID,
   payment_proof_url TEXT,
+  transaction_id TEXT,
   payment_method TEXT,
   team_name TEXT,
   team_members JSONB DEFAULT '[]',

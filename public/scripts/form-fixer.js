@@ -37,466 +37,367 @@
   
   // Fix navigation buttons
   function fixNavigation() {
-    // Hard-coded button fixes with maximum reliability
-    const buttons = {
-      step1Next: document.getElementById('step1NextBtn'),
-      step2Prev: document.getElementById('step2PrevBtn'),
-      step2Next: document.getElementById('step2NextBtn'),
-      step3Prev: document.getElementById('step3PrevBtn'),
-      step3Next: document.getElementById('step3NextBtn'),
-      step4Prev: document.getElementById('step4PrevBtn')
-    };
+    // Fix form navigation between steps
+    const navButtons = document.querySelectorAll('[data-nav-btn]');
+    navButtons.forEach(btn => {
+      // Ensure all buttons have click handlers
+      if (!btn.onclick) {
+        const targetStep = btn.dataset.target;
+        btn.addEventListener('click', () => {
+          navigateToStep(targetStep);
+        });
+      }
+    });
     
-    // Log which buttons were found
-    console.log('Found buttons:', Object.fromEntries(
-      Object.entries(buttons).map(([key, val]) => [key, !!val])
-    ));
+    // Direct button selectors with multiple fallbacks
+    const step1NextBtn = document.getElementById('step1NextBtn') || document.querySelector('.form-step#step1 button[type="button"]');
+    const step2NextBtn = document.getElementById('step2NextBtn') || document.querySelector('.form-step#step2 button[type="button"]:last-child');
+    const step3NextBtn = document.getElementById('step3NextBtn') || document.querySelector('.form-step#step3 button[type="button"]:last-child');
     
-    // Clone and replace button 1 with forced handling
-    if (buttons.step1Next) {
-      const newBtn = buttons.step1Next.cloneNode(true);
-      buttons.step1Next.parentNode.replaceChild(newBtn, buttons.step1Next);
+    if (step1NextBtn) {
+      console.log("📋 Fixing Step 1 Next button");
+      // Remove existing listeners by cloning and replacing
+      const newBtn = step1NextBtn.cloneNode(true);
+      step1NextBtn.parentNode.replaceChild(newBtn, step1NextBtn);
       
+      // Add direct event handler
       newBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        e.stopPropagation();
-        console.log('🔘 Step 1 Next clicked - direct handler');
-        forceNavigateToStep(2);
+        console.log("👆 Step 1 Next button clicked");
+        directGoToStep(2);
       });
     }
     
-    // Step 2 prev button
-    if (buttons.step2Prev) {
-      const newBtn = buttons.step2Prev.cloneNode(true);
-      buttons.step2Prev.parentNode.replaceChild(newBtn, buttons.step2Prev);
-      
+    if (step2NextBtn) {
+      console.log("📋 Fixing Step 2 Next button");
+      const newBtn = step2NextBtn.cloneNode(true);
+      step2NextBtn.parentNode.replaceChild(newBtn, step2NextBtn);
       newBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        e.stopPropagation();
-        console.log('🔘 Step 2 Prev clicked - direct handler');
-        forceNavigateToStep(1);
+        console.log("👆 Step 2 Next button clicked");
+        directGoToStep(3);
       });
     }
     
-    // Step 2 next button
-    if (buttons.step2Next) {
-      const newBtn = buttons.step2Next.cloneNode(true);
-      buttons.step2Next.parentNode.replaceChild(newBtn, buttons.step2Next);
-      
+    if (step3NextBtn) {
+      console.log("📋 Fixing Step 3 Next button");
+      const newBtn = step3NextBtn.cloneNode(true);
+      step3NextBtn.parentNode.replaceChild(newBtn, step3NextBtn);
       newBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        e.stopPropagation();
-        console.log('🔘 Step 2 Next clicked - direct handler');
-        
-        const selectedEvents = document.querySelectorAll('.event-checkbox-input:checked');
-        if (selectedEvents.length === 0) {
-          showFormError('Please select at least one event');
-          return;
-        }
-        
-        forceNavigateToStep(3);
-      });
-    }
-    
-    // Step 3 prev button
-    if (buttons.step3Prev) {
-      const newBtn = buttons.step3Prev.cloneNode(true);
-      buttons.step3Prev.parentNode.replaceChild(newBtn, buttons.step3Prev);
-      
-      newBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('🔘 Step 3 Prev clicked - direct handler');
-        forceNavigateToStep(2);
-      });
-    }
-    
-    // Step 3 next button
-    if (buttons.step3Next) {
-      const newBtn = buttons.step3Next.cloneNode(true);
-      buttons.step3Next.parentNode.replaceChild(newBtn, buttons.step3Next);
-      
-      newBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('🔘 Step 3 Next clicked - direct handler');
-        forceNavigateToStep(4);
-        
-        // Update payment amount too
-        updatePaymentAmounts();
-      });
-    }
-    
-    // Step 4 prev button
-    if (buttons.step4Prev) {
-      const newBtn = buttons.step4Prev.cloneNode(true);
-      buttons.step4Prev.parentNode.replaceChild(newBtn, buttons.step4Prev);
-      
-      newBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log('🔘 Step 4 Prev clicked - direct handler');
-        forceNavigateToStep(3);
+        console.log("👆 Step 3 Next button clicked");
+        directGoToStep(4);
       });
     }
   }
   
   // Fix event selection issues
   function fixEventSelection() {
-    // Set up category switchers
-    const techBtn = document.getElementById('techCategoryBtn');
-    const culturalBtn = document.getElementById('culturalCategoryBtn');
-    
-    if (techBtn && culturalBtn) {
-      // Clear and re-add tech category button click handler
-      const newTechBtn = techBtn.cloneNode(true);
-      techBtn.parentNode.replaceChild(newTechBtn, techBtn);
-      
-      newTechBtn.addEventListener('click', function() {
-        console.log('🔘 Tech category selected');
-        setActiveCategory('tech');
-      });
-      
-      // Clear and re-add cultural category button click handler
-      const newCulturalBtn = culturalBtn.cloneNode(true);
-      culturalBtn.parentNode.replaceChild(newCulturalBtn, culturalBtn);
-      
-      newCulturalBtn.addEventListener('click', function() {
-        console.log('🔘 Cultural category selected');
-        setActiveCategory('cultural');
-      });
-      
-      // Ensure tech is selected by default
-      setActiveCategory('tech');
-    }
-    
-    // Fix all event cards
+    // Direct selection of all event cards and checkboxes
     const eventCards = document.querySelectorAll('.event-card');
-    console.log(`Found ${eventCards.length} event cards to fix`);
+    const eventCheckboxes = document.querySelectorAll('.event-checkbox-input');
     
-    eventCards.forEach((card, index) => {
-      // Clone and replace to remove any existing handlers
+    // Global variables to track state
+    let selectedCategory = 'tech'; // Default category
+    let selectedEvents = new Set();
+    let totalFee = 0;
+    
+    // Fix event card click handling
+    eventCards.forEach(card => {
+      // Remove any existing click handlers by cloning and replacing
       const newCard = card.cloneNode(true);
       card.parentNode.replaceChild(newCard, card);
       
-      // Add direct click handler to the card
+      // Add new direct click handler
       newCard.addEventListener('click', function(e) {
-        // Don't continue if clicking on disabled card
+        // Don't handle click if card is disabled
         if (newCard.classList.contains('disabled')) {
+          console.log("Card is disabled, ignoring click");
           return;
         }
         
-        // If clicking directly on the checkbox, let it handle normally
-        if (e.target.closest('.event-checkbox-input')) {
-          return;
-        }
+        console.log("Card clicked:", newCard.dataset.eventId);
         
-        // Otherwise toggle the checkbox state
+        // Find the checkbox within this card
         const checkbox = newCard.querySelector('.event-checkbox-input');
         if (checkbox) {
+          // Toggle checkbox state
           checkbox.checked = !checkbox.checked;
+          console.log("Checkbox toggled:", checkbox.checked);
           
-          // Update card visually
+          // Update visual appearance
           if (checkbox.checked) {
             newCard.classList.add('selected');
-            const checkSpan = newCard.querySelector('.event-checkbox span');
-            if (checkSpan) {
-              checkSpan.classList.add('bg-purple-600');
-              checkSpan.classList.remove('border-gray-500');
-            }
+            newCard.querySelector('.event-checkbox span').classList.add('bg-purple-600');
+            newCard.querySelector('.event-checkbox span').classList.remove('border-gray-500');
+            
+            // Add to selected events and update fee
+            selectedEvents.add(newCard.dataset.eventId);
+            totalFee += parseInt(newCard.dataset.fee || 0, 10);
           } else {
             newCard.classList.remove('selected');
-            const checkSpan = newCard.querySelector('.event-checkbox span');
-            if (checkSpan) {
-              checkSpan.classList.remove('bg-purple-600');
-              checkSpan.classList.add('border-gray-500');
-            }
+            newCard.querySelector('.event-checkbox span').classList.remove('bg-purple-600');
+            newCard.querySelector('.event-checkbox span').classList.add('border-gray-500');
+            
+            // Remove from selected events and update fee
+            selectedEvents.delete(newCard.dataset.eventId);
+            totalFee -= parseInt(newCard.dataset.fee || 0, 10);
           }
           
-          // Update event list and total
-          updateEventSelections();
+          // Update total amount display
+          updateTotalAmount();
+          
+          // Update selected events list
+          updateSelectedEventsList();
         }
       });
       
-      // Also fix the checkbox directly
+      // Also handle the checkbox directly to ensure it works
       const checkbox = newCard.querySelector('.event-checkbox-input');
       if (checkbox) {
-        checkbox.addEventListener('change', function() {
+        checkbox.addEventListener('change', function(e) {
+          // Stop propagation to prevent double-triggering with card click
+          e.stopPropagation();
+          
+          console.log("Checkbox changed directly:", this.checked);
+          
+          // Update card appearance
           if (this.checked) {
             newCard.classList.add('selected');
-            const checkSpan = newCard.querySelector('.event-checkbox span');
-            if (checkSpan) {
-              checkSpan.classList.add('bg-purple-600');
-              checkSpan.classList.remove('border-gray-500');
-            }
+            newCard.querySelector('.event-checkbox span').classList.add('bg-purple-600');
+            newCard.querySelector('.event-checkbox span').classList.remove('border-gray-500');
+            
+            // Add to selected events and update fee
+            selectedEvents.add(newCard.dataset.eventId);
+            totalFee += parseInt(newCard.dataset.fee || 0, 10);
           } else {
             newCard.classList.remove('selected');
-            const checkSpan = newCard.querySelector('.event-checkbox span');
-            if (checkSpan) {
-              checkSpan.classList.remove('bg-purple-600');
-              checkSpan.classList.add('border-gray-500');
-            }
+            newCard.querySelector('.event-checkbox span').classList.remove('bg-purple-600');
+            newCard.querySelector('.event-checkbox span').classList.add('border-gray-500');
+            
+            // Remove from selected events and update fee
+            selectedEvents.delete(newCard.dataset.eventId);
+            totalFee -= parseInt(newCard.dataset.fee || 0, 10);
           }
           
-          // Update event list and total
-          updateEventSelections();
+          // Update total amount display
+          updateTotalAmount();
+          
+          // Update selected events list
+          updateSelectedEventsList();
         });
       }
     });
+    
+    // Fix category selection buttons
+    const techCategoryBtn = document.getElementById('techCategoryBtn');
+    const culturalCategoryBtn = document.getElementById('culturalCategoryBtn');
+    const techEventsContainer = document.getElementById('techEventsContainer');
+    const culturalEventsContainer = document.getElementById('culturalEventsContainer');
+    
+    if (techCategoryBtn) {
+      techCategoryBtn.addEventListener('click', function() {
+        console.log("Tech category selected");
+        selectedCategory = 'tech';
+        
+        // Update UI
+        techCategoryBtn.classList.add('bg-purple-600', 'text-white');
+        techCategoryBtn.classList.remove('bg-gray-800', 'text-gray-300');
+        culturalCategoryBtn.classList.add('bg-gray-800', 'text-gray-300');
+        culturalCategoryBtn.classList.remove('bg-purple-600', 'text-white');
+        
+        // Show tech events, hide cultural events
+        techEventsContainer.classList.remove('hidden');
+        culturalEventsContainer.classList.add('hidden');
+        
+        // Show tech QR code in step 4
+        const techQrCode = document.getElementById('techQrCode');
+        const culturalQrCode = document.getElementById('culturalQrCode');
+        if (techQrCode && culturalQrCode) {
+          techQrCode.classList.remove('hidden');
+          culturalQrCode.classList.add('hidden');
+        }
+      });
+    }
+    
+    if (culturalCategoryBtn) {
+      culturalCategoryBtn.addEventListener('click', function() {
+        console.log("Cultural category selected");
+        selectedCategory = 'cultural';
+        
+        // Update UI
+        culturalCategoryBtn.classList.add('bg-purple-600', 'text-white');
+        culturalCategoryBtn.classList.remove('bg-gray-800', 'text-gray-300');
+        techCategoryBtn.classList.add('bg-gray-800', 'text-gray-300');
+        techCategoryBtn.classList.remove('bg-purple-600', 'text-white');
+        
+        // Show cultural events, hide tech events
+        culturalEventsContainer.classList.remove('hidden');
+        techEventsContainer.classList.add('hidden');
+        
+        // Show cultural QR code in step 4
+        const techQrCode = document.getElementById('techQrCode');
+        const culturalQrCode = document.getElementById('culturalQrCode');
+        if (techQrCode && culturalQrCode) {
+          techQrCode.classList.add('hidden');
+          culturalQrCode.classList.remove('hidden');
+        }
+      });
+    }
   }
   
   // Fix payment section
   function fixPaymentSection() {
-    // Ensure the payment QR codes are visible
-    const techQrCode = document.getElementById('techQrCode');
-    const culturalQrCode = document.getElementById('culturalQrCode');
-    
-    if (techQrCode && culturalQrCode) {
-      // Default to tech events QR code
-      techQrCode.classList.remove('hidden');
-      culturalQrCode.classList.add('hidden');
-    }
-    
-    // Fix payment proof image upload
-    const paymentProof = document.getElementById('paymentProof');
+    // Hide payment proof upload elements if they exist
+    const paymentProofUpload = document.getElementById('paymentProof');
     const previewContainer = document.getElementById('previewContainer');
-    const previewImage = document.getElementById('previewImage');
-    const removeImageBtn = document.getElementById('removeImageBtn');
-    const uploadLabel = document.getElementById('uploadLabel');
     
-    if (paymentProof && previewContainer && previewImage) {
-      paymentProof.addEventListener('change', function() {
+    if (paymentProofUpload) {
+      // Make sure the file upload works correctly
+      paymentProofUpload.addEventListener('change', function() {
         if (this.files && this.files[0]) {
           const file = this.files[0];
           
-          // Check file size
-          if (file.size > 5 * 1024 * 1024) {
-            showFormError('File size exceeds the maximum limit of 5MB');
+          if (file.size > 5 * 1024 * 1024) { // 5MB limit
+            alert('File size exceeds the maximum limit of 5MB');
             this.value = '';
-            previewContainer.classList.add('hidden');
+            if (previewContainer) previewContainer.classList.add('hidden');
             return;
           }
           
           // Preview the image
-          const reader = new FileReader();
-          reader.onload = function(e) {
-            previewImage.src = e.target.result;
-            previewContainer.classList.remove('hidden');
-            if (uploadLabel) {
-              uploadLabel.textContent = 'Change Payment Proof';
+          if (previewContainer) {
+            const previewImage = document.getElementById('previewImage');
+            if (previewImage) {
+              const reader = new FileReader();
+              reader.onload = function(e) {
+                previewImage.src = e.target.result;
+                previewContainer.classList.remove('hidden');
+              };
+              reader.readAsDataURL(file);
             }
-          };
-          
-          reader.readAsDataURL(file);
+          }
         }
       });
-      
-      // Handle remove button
-      if (removeImageBtn) {
-        removeImageBtn.addEventListener('click', function() {
-          paymentProof.value = '';
-          previewContainer.classList.add('hidden');
-          if (uploadLabel) {
-            uploadLabel.textContent = 'Upload Payment Proof/Screenshot';
-          }
-        });
-      }
     }
     
-    // Fix the payment amount display
-    updatePaymentAmounts();
-  }
-  
-  // Helper function to forcefully navigate between steps
-  function forceNavigateToStep(step) {
-    // Hide all steps
-    document.querySelectorAll('.form-step').forEach(s => {
-      s.classList.remove('active');
-      s.style.display = 'none';
-    });
+    // Fix payment method selection
+    const upiPayment = document.getElementById('upiPayment');
+    const manualPayment = document.getElementById('manualPayment');
+    const transactionIdField = document.getElementById('transactionId');
+    const manualTransactionIdField = document.getElementById('manualTransactionId');
     
-    // Show target step
-    const targetStep = document.getElementById(`step${step}`);
-    if (targetStep) {
-      targetStep.classList.add('active');
-      targetStep.style.display = 'block';
-      console.log(`✅ Successfully navigated to step ${step}`);
-      
-      // Update step indicators
-      updateStepIndicators(step);
-    } else {
-      console.error(`❌ Could not find step${step} element`);
+    if (upiPayment && transactionIdField) {
+      upiPayment.addEventListener('change', function() {
+        const qrCodes = document.getElementById('techQrCode')?.parentElement;
+        if (qrCodes) qrCodes.style.opacity = '1';
+        if (transactionIdField) transactionIdField.required = true;
+        if (manualTransactionIdField) manualTransactionIdField.required = false;
+      });
+    }
+    
+    if (manualPayment && manualTransactionIdField) {
+      manualPayment.addEventListener('change', function() {
+        const qrCodes = document.getElementById('techQrCode')?.parentElement;
+        if (qrCodes) qrCodes.style.opacity = '0.5';
+        if (manualTransactionIdField) manualTransactionIdField.required = true;
+        if (transactionIdField) transactionIdField.required = false;
+      });
     }
   }
   
-  // Helper function to set active category
-  function setActiveCategory(category) {
-    const techBtn = document.getElementById('techCategoryBtn');
-    const culturalBtn = document.getElementById('culturalCategoryBtn');
-    const techContainer = document.getElementById('techEventsContainer');
-    const culturalContainer = document.getElementById('culturalEventsContainer');
-    const techQrCode = document.getElementById('techQrCode');
-    const culturalQrCode = document.getElementById('culturalQrCode');
-    
-    if (category === 'tech') {
-      // Update buttons
-      techBtn.classList.add('bg-purple-600', 'text-white');
-      techBtn.classList.remove('bg-gray-800', 'text-gray-300');
-      culturalBtn.classList.add('bg-gray-800', 'text-gray-300');
-      culturalBtn.classList.remove('bg-purple-600', 'text-white');
+  // Helper function to update total amount display
+  function updateTotalAmount() {
+    const totalAmount = document.getElementById('totalAmount');
+    if (totalAmount) {
+      totalAmount.textContent = `₹${window.totalFee || 0}`;
+      console.log("Total fee updated:", window.totalFee);
       
-      // Update containers
-      techContainer.classList.remove('hidden');
-      culturalContainer.classList.add('hidden');
-      
-      // Update QR codes
-      if (techQrCode && culturalQrCode) {
-        techQrCode.classList.remove('hidden');
-        culturalQrCode.classList.add('hidden');
-      }
-    } else {
-      // Update buttons
-      culturalBtn.classList.add('bg-purple-600', 'text-white');
-      culturalBtn.classList.remove('bg-gray-800', 'text-gray-300');
-      techBtn.classList.add('bg-gray-800', 'text-gray-300');
-      techBtn.classList.remove('bg-purple-600', 'text-white');
-      
-      // Update containers
-      culturalContainer.classList.remove('hidden');
-      techContainer.classList.add('hidden');
-      
-      // Update QR codes
-      if (techQrCode && culturalQrCode) {
-        techQrCode.classList.add('hidden');
-        culturalQrCode.classList.remove('hidden');
-      }
+      // Also update payment amount displays
+      const techPaymentAmount = document.getElementById('techPaymentAmount');
+      const culturalPaymentAmount = document.getElementById('culturalPaymentAmount');
+      if (techPaymentAmount) techPaymentAmount.textContent = window.totalFee || 0;
+      if (culturalPaymentAmount) culturalPaymentAmount.textContent = window.totalFee || 0;
     }
   }
   
-  // Helper function to update step indicators
-  function updateStepIndicators(currentStep) {
-    const indicators = document.querySelectorAll('.step-indicator');
-    const connectors = [
-      document.getElementById('stepConnector1'),
-      document.getElementById('stepConnector2'),
-      document.getElementById('stepConnector3')
-    ];
+  // Helper function to update selected events list
+  function updateSelectedEventsList() {
+    const selectedEventsList = document.getElementById('selectedEventsList');
+    if (!selectedEventsList) return;
     
-    indicators.forEach((indicator, index) => {
-      const stepNum = index + 1;
-      
-      if (stepNum < currentStep) {
-        // Completed steps
-        indicator.classList.remove('bg-gray-700');
-        indicator.classList.add('bg-green-600');
-        indicator.innerHTML = '<i class="fas fa-check"></i>';
-      } else if (stepNum === currentStep) {
-        // Current step
-        indicator.classList.remove('bg-gray-700', 'bg-green-600');
-        indicator.classList.add('bg-purple-600');
-        indicator.textContent = stepNum;
-      } else {
-        // Future steps
-        indicator.classList.remove('bg-purple-600', 'bg-green-600');
-        indicator.classList.add('bg-gray-700');
-        indicator.textContent = stepNum;
-      }
-    });
-    
-    // Update connectors
-    connectors.forEach((connector, index) => {
-      if (!connector) return;
-      
-      if (index + 1 < currentStep) {
-        connector.classList.remove('bg-gray-700');
-        connector.classList.add('bg-green-600');
-      } else {
-        connector.classList.remove('bg-green-600');
-        connector.classList.add('bg-gray-700');
-      }
-    });
-  }
-  
-  // Helper function to update event selections in the UI
-  function updateEventSelections() {
     const selectedEvents = document.querySelectorAll('.event-checkbox-input:checked');
-    let totalFee = 0;
     
-    // Calculate total fee
+    if (selectedEvents.length === 0) {
+      selectedEventsList.innerHTML = '<p class="text-gray-400">No events selected</p>';
+      return;
+    }
+    
+    let eventsHtml = '';
+    
     selectedEvents.forEach(checkbox => {
       const card = checkbox.closest('.event-card');
       if (card) {
-        const fee = parseInt(card.dataset.fee || '0', 10);
-        totalFee += fee;
+        const eventName = card.querySelector('h3').textContent;
+        const eventFee = card.dataset.fee;
+        
+        eventsHtml += `
+          <div class="flex justify-between items-center mb-2 pb-2 border-b border-gray-700">
+            <span class="text-white">${eventName}</span>
+            <span class="text-purple-400">₹${eventFee}</span>
+          </div>
+        `;
       }
     });
     
-    // Update total amount
-    const totalAmount = document.getElementById('totalAmount');
-    if (totalAmount) {
-      totalAmount.textContent = `₹${totalFee}`;
-    }
-    
-    // Update selected events list
-    const selectedEventsList = document.getElementById('selectedEventsList');
-    if (selectedEventsList) {
-      if (selectedEvents.length === 0) {
-        selectedEventsList.innerHTML = '<p class="text-gray-400">No events selected</p>';
-      } else {
-        let eventsHtml = '';
-        
-        selectedEvents.forEach(checkbox => {
-          const card = checkbox.closest('.event-card');
-          if (card) {
-            const name = card.querySelector('h3')?.textContent || 'Unknown Event';
-            const fee = card.dataset.fee || '0';
-            
-            eventsHtml += `
-              <div class="flex justify-between items-center mb-2 pb-2 border-b border-gray-700">
-                <span class="text-white">${name}</span>
-                <span class="text-purple-400">₹${fee}</span>
-              </div>
-            `;
-          }
-        });
-        
-        selectedEventsList.innerHTML = eventsHtml;
-      }
-    }
-    
-    // Update payment amounts
-    updatePaymentAmounts();
+    selectedEventsList.innerHTML = eventsHtml;
   }
   
-  // Helper function to update payment amounts
-  function updatePaymentAmounts() {
-    const totalAmount = document.getElementById('totalAmount');
-    const techAmount = document.getElementById('techPaymentAmount');
-    const culturalAmount = document.getElementById('culturalPaymentAmount');
+  // Direct step navigation function using pure DOM manipulation
+  function directGoToStep(stepNumber) {
+    console.log(`🔄 Directly navigating to step ${stepNumber}`);
     
-    if (totalAmount && techAmount && culturalAmount) {
-      const amount = totalAmount.textContent.replace('₹', '');
-      techAmount.textContent = amount;
-      culturalAmount.textContent = amount;
-    }
-  }
-  
-  // Helper function to show error
-  function showFormError(message) {
-    const errorAlert = document.getElementById('errorAlert');
-    const errorMessage = document.getElementById('errorMessage');
-    
-    if (errorAlert && errorMessage) {
-      errorMessage.textContent = message;
-      errorAlert.classList.remove('hidden');
+    try {
+      // Hide all steps
+      document.querySelectorAll('.form-step').forEach(step => {
+        step.classList.remove('active');
+        step.style.display = 'none';
+      });
       
-      // Auto-hide after 5 seconds
-      setTimeout(() => {
-        errorAlert.classList.add('hidden');
-      }, 5000);
-    } else {
-      // Fallback to standard alert
-      alert(message);
+      // Show target step
+      const targetStep = document.getElementById(`step${stepNumber}`);
+      if (targetStep) {
+        targetStep.classList.add('active');
+        targetStep.style.display = 'block';
+        console.log(`✅ Step ${stepNumber} is now displayed`);
+      } else {
+        console.error(`❌ Could not find step${stepNumber} element`);
+      }
+      
+      // Update step indicators
+      document.querySelectorAll('.step-indicator').forEach((indicator, index) => {
+        if (index + 1 === stepNumber) {
+          indicator.classList.add('active');
+          indicator.classList.remove('completed');
+        } else if (index + 1 < stepNumber) {
+          indicator.classList.add('completed');
+          indicator.classList.remove('active');
+        } else {
+          indicator.classList.remove('active', 'completed');
+        }
+      });
+    } catch (err) {
+      console.error("❌ Navigation error:", err);
+      alert("Navigation error occurred. Please try refreshing the page.");
     }
   }
+  
+  // Make navigate function globally available
+  window.directGoToStep = directGoToStep;
+  
+  // Make updateTotalAmount function globally available
+  window.updateTotalAmount = updateTotalAmount;
+  
+  // Make updateSelectedEventsList function globally available
+  window.updateSelectedEventsList = updateSelectedEventsList;
 })();

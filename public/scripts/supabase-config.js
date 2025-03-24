@@ -1,79 +1,66 @@
-// Supabase configuration and environment setup
-(function() {
-    // Default development configuration - updated with actual credentials
-    const SUPABASE_URL = 'https://ceickbodqhwfhcpabfdq.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlaWNrYm9kcWh3ZmhjcGFiZmRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzMzU2MTgsImV4cCI6MjA1NzkxMTYxOH0.ZyTG1FkQzjQ0CySlyvkQEYPHWBbZJd--vsB_IqILuo8';
+// Initialize Supabase client configuration
+const SUPABASE_URL = 'https://ceickbodqhwfhcpabfdq.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNlaWNrYm9kcWh3ZmhjcGFiZmRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDIzMzU2MTgsImV4cCI6MjA1NzkxMTYxOH0.ZyTG1FkQzjQ0CySlyvkQEYPHWBbZJd--vsB_IqILuo8';
+
+// Table constants
+const TABLES = {
+    REGISTRATIONS: 'registrations',
+    EVENTS: 'events',
+    PAYMENTS: 'payments',
+    STORAGE: {
+        PAYMENT_PROOFS: 'payment_proofs'
+    }
+};
+
+// Initialize Supabase client when this script is loaded
+let supabase;
+
+function initSupabase() {
+    if (typeof supabaseClient !== 'undefined') {
+        return supabaseClient;
+    }
     
-    // Try to load from environment if available (for deployed environments)
-    const envUrl = typeof process !== 'undefined' && process.env ? 
-        process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL : null;
+    if (typeof supabase !== 'undefined') {
+        return supabase;
+    }
+    
+    if (typeof window.supabase !== 'undefined') {
+        return window.supabase;
+    }
+    
+    try {
+        if (typeof window.supabase === 'undefined') {
+            // Check if the Supabase client exists globally
+            if (typeof supabaseJs !== 'undefined') {
+                window.supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            } else {
+                // Fallback to global 'supabase' object if available
+                window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+            }
+        }
         
-    const envKey = typeof process !== 'undefined' && process.env ? 
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY : null;
-    
-    // Use environment variables if available, otherwise use defaults
-    const url = envUrl || SUPABASE_URL;
-    const key = envKey || SUPABASE_KEY;
-    
-    // Initialize Supabase client
-    function initSupabase() {
-        try {
-            if (!url || !key) {
-                console.error('Supabase URL or key not configured properly');
-                return null;
-            }
-            
-            if (typeof supabase === 'undefined') {
-                console.error('Supabase client library not loaded');
-                return null;
-            }
-            
-            const client = supabase.createClient(url, key);
-            return client;
-        } catch (error) {
-            console.error('Failed to initialize Supabase client:', error);
-            return null;
-        }
+        return window.supabase;
+    } catch (error) {
+        console.error('Error initializing Supabase client:', error);
+        return null;
     }
-    
-    // Database constants
-    const TABLES = {
-        REGISTRATIONS: 'registrations',
-        SELECTED_EVENTS: 'selected_events',
-        TEAM_MEMBERS: 'team_members',
-        EVENTS: 'events',
-        PAYMENTS: 'payments',
-        STORAGE: {
-            PAYMENT_PROOFS: 'payment_proofs'
-        }
-    };
-    
-    // Utility functions
-    function formatTimestamp(timestamp) {
-        if (!timestamp) return '';
-        const date = new Date(timestamp);
-        return date.toLocaleString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        });
+}
+
+// Ensure Supabase client is available globally
+window.supabaseConfig = {
+    url: SUPABASE_URL,
+    key: SUPABASE_ANON_KEY,
+    tables: TABLES,
+    initSupabase: initSupabase
+};
+
+// Execute initialization when the script is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Initializing Supabase client...');
+    const client = initSupabase();
+    if (client) {
+        console.log('Supabase client initialized successfully');
+    } else {
+        console.error('Failed to initialize Supabase client');
     }
-    
-    function generateId(prefix = 'INF') {
-        return `${prefix}-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`;
-    }
-    
-    // Export for use in other files
-    window.supabaseConfig = {
-        url,
-        key,
-        initSupabase,
-        TABLES,
-        utils: {
-            formatTimestamp,
-            generateId
-        }
-    };
-})();
+});

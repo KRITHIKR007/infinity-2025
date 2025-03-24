@@ -246,3 +246,112 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
 }
 
 export { setupDatabase, createTables, createBuckets, setupSupabase, supabase, TABLES };
+
+/**
+ * Supabase Database Setup Script
+ * Initializes the database tables and policies for Infinity 2025
+ */
+
+const { createClient } = require('@supabase/supabase-js');
+const fs = require('fs');
+const path = require('path');
+
+// Supabase connection details
+const supabaseUrl = process.env.SUPABASE_URL || 'https://ceickbodqhwfhcpabfdq.supabase.co';
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY; // Use service key for admin privileges
+
+// If no service key is provided, exit
+if (!supabaseKey) {
+  console.error('Error: SUPABASE_SERVICE_KEY environment variable not set');
+  console.error('Please set the SUPABASE_SERVICE_KEY environment variable to continue');
+  process.exit(1);
+}
+
+// Initialize Supabase client with service key
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+/**
+ * Read SQL file content
+ * @param {string} filename - SQL filename
+ * @returns {string} SQL content
+ */
+function readSqlFile(filename) {
+  try {
+    return fs.readFileSync(path.join(__dirname, filename), 'utf8');
+  } catch (error) {
+    console.error(`Error reading SQL file ${filename}:`, error);
+    return null;
+  }
+}
+
+/**
+ * Execute SQL script
+ * @param {string} sql - SQL commands to execute
+ * @param {string} description - Description of what the SQL does
+ */
+async function executeSql(sql, description) {
+  if (!sql) return;
+  
+  console.log(`Executing SQL: ${description}...`);
+  try {
+    const { error } = await supabase.rpc('exec_sql', { sql_query: sql });
+    
+    if (error) throw error;
+    
+    console.log(`✅ Successfully executed: ${description}`);
+  } catch (error) {
+    console.error(`❌ Error executing SQL for ${description}:`, error.message);
+  }
+}
+
+/**
+ * Test database connection
+ */
+async function testConnection() {
+  try {
+    const { data, error } = await supabase.from('events').select('count', { count: 'exact', head: true });
+    
+    if (error) throw error;
+    
+    console.log('✅ Successfully connected to Supabase');
+    return true;
+  } catch (error) {
+    console.error('❌ Failed to connect to Supabase:', error.message);
+    return false;
+  }
+}
+
+/**
+ * Initialize database tables and policies
+ */
+async function initDatabase() {
+  console.log('🚀 Starting Supabase database setup...');
+  
+  // Test connection first
+  const connected = await testConnection();
+  if (!connected) {
+    console.error('Exiting due to connection failure');
+    process.exit(1);
+  }
+  
+  // Read SQL files
+  const createTablesSql = readSqlFile('create-tables.sql');
+  const setupPoliciesSql = readSqlFile('setup-policies.sql');
+  
+  // Execute SQL scripts
+  await executeSql(createTablesSql, 'Creating tables');
+  await executeSql(setupPoliciesSql, 'Setting up policies');
+  
+  console.log('🎉 Database setup completed');
+}
+
+// Run the initialization
+initDatabase()
+  .then(() => {
+    console.log('Setup process completed');
+    process.exit(0);
+  })
+  .catch(error => {
+    console.error('Setup process failed:', error);
+    process.exit(1);
+  });

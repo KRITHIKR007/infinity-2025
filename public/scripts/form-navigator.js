@@ -1,106 +1,117 @@
 /**
- * Simple and reliable form step navigation
+ * Create a form navigator for multi-step forms
+ * @returns {Object} Form navigator with navigation functions
  */
-
 export function createFormNavigator() {
+    // Track current step
     let currentStep = 1;
     
-    // Navigate to specific step with enhanced reliability
-    function goToStep(stepNumber, formSteps, stepIndicators) {
-        console.log(`Form Navigator: Navigating to step ${stepNumber}`);
+    // Get step elements
+    const getFormSteps = () => document.querySelectorAll('.form-step');
+    const getStepIndicators = () => document.querySelectorAll('.step-indicator');
+    
+    /**
+     * Navigate to a specific step
+     * @param {number} step - Step number to navigate to
+     */
+    function goToStep(step) {
+        const formSteps = getFormSteps();
+        const stepIndicators = getStepIndicators();
         
-        if (!formSteps || !formSteps.length) {
-            console.error("Form Navigator: formSteps is missing or empty");
+        if (!formSteps.length || !stepIndicators.length) {
+            console.error('Form steps or indicators not found');
             return;
         }
         
-        if (!stepIndicators || !stepIndicators.length) {
-            console.error("Form Navigator: stepIndicators is missing or empty");
-            return;
-        }
+        // Hide all steps
+        formSteps.forEach(formStep => {
+            formStep.classList.remove('active');
+            formStep.style.display = 'none';
+        });
         
-        // Force display updates with direct style manipulation for maximum reliability
-        formSteps.forEach((step, index) => {
-            try {
-                if (index + 1 === stepNumber) {
-                    step.classList.add('active');
-                    step.style.display = 'block';
-                    step.style.opacity = '1';
-                    step.style.visibility = 'visible';
-                } else {
-                    step.classList.remove('active');
-                    step.style.display = 'none';
-                    step.style.opacity = '0';
-                    step.style.visibility = 'hidden';
-                }
-            } catch (err) {
-                console.error(`Form Navigator: Error setting display for step ${index + 1}:`, err);
+        // Show target step
+        const targetStep = document.getElementById(`step${step}`);
+        if (targetStep) {
+            targetStep.classList.add('active');
+            targetStep.style.display = 'block';
+            
+            // Update step indicators
+            updateStepIndicators(step, stepIndicators);
+            
+            // Update current step
+            currentStep = step;
+            
+            // Scroll to top of form
+            window.scrollTo({
+                top: formSteps[0].offsetTop - 100,
+                behavior: 'smooth'
+            });
+        } else {
+            console.error(`Step ${step} element not found`);
+        }
+    }
+    
+    /**
+     * Update step indicators to reflect current step
+     * @param {number} currentStep - Current step number
+     * @param {NodeList} indicators - Step indicator elements
+     */
+    function updateStepIndicators(currentStep, indicators) {
+        indicators.forEach((indicator, index) => {
+            if (index + 1 === currentStep) {
+                indicator.classList.add('active');
+                indicator.classList.remove('completed');
+            } else if (index + 1 < currentStep) {
+                indicator.classList.add('completed');
+                indicator.classList.remove('active');
+            } else {
+                indicator.classList.remove('active', 'completed');
             }
         });
         
-        // Update indicators with try-catch for error resilience
-        try {
-            stepIndicators.forEach((indicator, index) => {
-                if (index + 1 === stepNumber) {
-                    indicator.classList.add('active');
-                    indicator.classList.remove('completed');
-                } else if (index + 1 < stepNumber) {
-                    indicator.classList.add('completed');
-                    indicator.classList.remove('active');
+        // Update connectors
+        for (let i = 1; i < 4; i++) {
+            const connector = document.getElementById(`stepConnector${i}`);
+            if (connector) {
+                if (i < currentStep) {
+                    connector.classList.remove('bg-gray-700');
+                    connector.classList.add('bg-green-600');
                 } else {
-                    indicator.classList.remove('active', 'completed');
+                    connector.classList.remove('bg-green-600');
+                    connector.classList.add('bg-gray-700');
                 }
-            });
-        } catch (err) {
-            console.error("Form Navigator: Error updating step indicators:", err);
+            }
         }
-        
-        currentStep = stepNumber;
-        console.log(`Form Navigator: Current step is now ${currentStep}`);
-        
-        // Return status for debugging
-        return {
-            success: true,
-            currentStep
-        };
+    }
+    
+    /**
+     * Go to next step
+     */
+    function next() {
+        goToStep(currentStep + 1);
+    }
+    
+    /**
+     * Go to previous step
+     */
+    function prev() {
+        if (currentStep > 1) {
+            goToStep(currentStep - 1);
+        }
+    }
+    
+    /**
+     * Get current step
+     * @returns {number} Current step
+     */
+    function getCurrentStep() {
+        return currentStep;
     }
     
     return {
         goToStep,
-        getCurrentStep: () => currentStep,
-        
-        // Add a direct step controller for emergency navigation
-        forceStep: (stepNumber) => {
-            console.log(`Form Navigator: Force navigating to step ${stepNumber}`);
-            
-            try {
-                // Direct DOM manipulation as fallback
-                document.querySelectorAll('.form-step').forEach(step => {
-                    if (step.id === `step${stepNumber}`) {
-                        step.classList.add('active');
-                        step.style.display = 'block';
-                    } else {
-                        step.classList.remove('active');
-                        step.style.display = 'none';
-                    }
-                });
-                
-                document.querySelectorAll('.step-indicator').forEach((indicator, index) => {
-                    if (index + 1 === stepNumber) {
-                        indicator.classList.add('active');
-                    } else if (index + 1 < stepNumber) {
-                        indicator.classList.add('completed');
-                    } else {
-                        indicator.classList.remove('active', 'completed');
-                    }
-                });
-                
-                currentStep = stepNumber;
-                return true;
-            } catch (err) {
-                console.error("Form Navigator: Error in forceStep:", err);
-                return false;
-            }
-        }
+        next,
+        prev,
+        getCurrentStep
     };
 }

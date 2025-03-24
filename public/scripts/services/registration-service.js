@@ -1,4 +1,5 @@
 import { hasTeamEvents } from '../registration-helpers.js';
+import { ValidationService } from './validation-service.js';
 
 /**
  * Service for handling event registrations
@@ -51,58 +52,18 @@ export class RegistrationService {
             const registrationId = `INF-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`;
             console.log('RegistrationService: Generated registration ID:', registrationId);
             
-            // Step 1: Upload payment proof if provided
-            let paymentProofUrl = null;
-            let paymentProofPath = null;
+            // Get transaction ID
+            const transactionId = formData.transactionId || null;
+            console.log('RegistrationService: Transaction ID:', transactionId);
             
-            if (formData.paymentMethod === 'qr' && formData.paymentProof) {  
-                console.log('RegistrationService: Uploading payment proof');              
-                try {
-                    // Try to use PhotoService from window or directly import if needed
-                    const photoService = window.PhotoService || (await import('./photo-service.js')).PhotoService;
-                    
-                    const uploadResult = await photoService.uploadPhoto(
-                        formData.paymentProof,
-                        'payment_proofs',
-                        'payment-proofs',
-                        true // optimize image
-                    );
-                    
-                    if (!uploadResult.success) {
-                        console.error('RegistrationService: Payment proof upload failed', uploadResult.error);
-                        throw new Error(uploadResult.error || 'Failed to upload payment proof');
-                    }
-                    
-                    paymentProofUrl = uploadResult.url;
-                    paymentProofPath = uploadResult.path;
-                    console.log('RegistrationService: Payment proof uploaded successfully', paymentProofUrl);
-                } catch (uploadError) {
-                    console.error('RegistrationService: Error in payment proof upload:', uploadError);
-                    // Try direct upload as fallback
-                    const file = formData.paymentProof;
-                    const fileName = `${Date.now()}-payment-proof.${file.name.split('.').pop()}`;
-                    
-                    console.log('RegistrationService: Attempting direct upload as fallback');
-                    const { data: uploadData, error: directUploadError } = await supabase.storage
-                        .from('payment_proofs')
-                        .upload(fileName, file);
-                        
-                    if (directUploadError) {
-                        console.error('RegistrationService: Direct upload failed:', directUploadError);
-                        throw directUploadError;
-                    }
-                    
-                    const { data: urlData } = supabase.storage
-                        .from('payment_proofs')
-                        .getPublicUrl(fileName);
-                        
-                    paymentProofUrl = urlData.publicUrl;
-                    paymentProofPath = fileName;
-                    console.log('RegistrationService: Direct upload successful:', paymentProofUrl);
-                }
+            if (!transactionId) {
+                return {
+                    success: false,
+                    error: 'Transaction ID is required'
+                };
             }
             
-            // Step 2: Create the registration record
+            // Create the registration record
             console.log('RegistrationService: Creating registration record');
             const registrationData = {
                 registration_id: registrationId,
@@ -113,8 +74,8 @@ export class RegistrationService {
                 category: formData.category,
                 team_name: formData.teamName || null,
                 payment_method: formData.paymentMethod,
-                payment_status: formData.paymentMethod === 'venue' ? 'pending' : 'pending', // Always pending until verified
-                payment_proof_url: paymentProofUrl,
+                payment_status: 'pending', // Always pending until verified
+                transaction_id: transactionId,
                 created_at: new Date().toISOString(),
                 events: formData.selectedEvents,
                 event_name: formData.eventNames.join(', '),

@@ -113,8 +113,60 @@ function fixNavigationButtons() {
         newBtn.setAttribute('onclick', 'validateStep1() && goToStep(2); return false;');
     }
     
-    // Similar fixes for other navigation buttons
-    // ...
+    // Add similar fixes for other navigation buttons
+    if (step2PrevBtn) {
+        const newBtn = step2PrevBtn.cloneNode(true);
+        step2PrevBtn.parentNode.replaceChild(newBtn, step2PrevBtn);
+        newBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            navigateToStep(1);
+        });
+        newBtn.setAttribute('onclick', 'goToStep(1); return false;');
+    }
+    
+    if (step2NextBtn) {
+        const newBtn = step2NextBtn.cloneNode(true);
+        step2NextBtn.parentNode.replaceChild(newBtn, step2NextBtn);
+        newBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (validateStep2()) {
+                navigateToStep(3);
+            }
+        });
+        newBtn.setAttribute('onclick', 'validateStep2() && goToStep(3); return false;');
+    }
+    
+    if (step3PrevBtn) {
+        const newBtn = step3PrevBtn.cloneNode(true);
+        step3PrevBtn.parentNode.replaceChild(newBtn, step3PrevBtn);
+        newBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            navigateToStep(2);
+        });
+        newBtn.setAttribute('onclick', 'goToStep(2); return false;');
+    }
+    
+    if (step3NextBtn) {
+        const newBtn = step3NextBtn.cloneNode(true);
+        step3NextBtn.parentNode.replaceChild(newBtn, step3NextBtn);
+        newBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (validateStep3()) {
+                navigateToStep(4);
+            }
+        });
+        newBtn.setAttribute('onclick', 'validateStep3() && goToStep(4); return false;');
+    }
+    
+    if (step4PrevBtn) {
+        const newBtn = step4PrevBtn.cloneNode(true);
+        step4PrevBtn.parentNode.replaceChild(newBtn, step4PrevBtn);
+        newBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            navigateToStep(3);
+        });
+        newBtn.setAttribute('onclick', 'goToStep(3); return false;');
+    }
 }
 
 /**
@@ -397,6 +449,33 @@ function validateStep1() {
 }
 
 /**
+ * Validate step 2 (event selection)
+ */
+function validateStep2() {
+    const selectedEvents = document.querySelectorAll('.event-checkbox-input:checked');
+    if (selectedEvents.length === 0) {
+        showError('Please select at least one event');
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Validate step 3 (team information)
+ */
+function validateStep3() {
+    // Skip validation if there are no team events
+    if (document.getElementById('noTeamEventsMessage').classList.contains('hidden')) {
+        const teamName = document.getElementById('teamName').value.trim();
+        if (!teamName) {
+            showError('Please enter a team name');
+            return false;
+        }
+    }
+    return true;
+}
+
+/**
  * Email validation
  */
 function validateEmail(email) {
@@ -448,3 +527,8 @@ window.goToStep = function(step) {
         targetStep.style.display = 'block';
     }
 };
+
+// Expose validation functions globally
+window.validateStep1 = validateStep1;
+window.validateStep2 = validateStep2;
+window.validateStep3 = validateStep3;

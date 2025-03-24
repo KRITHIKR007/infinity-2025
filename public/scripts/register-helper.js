@@ -150,6 +150,11 @@ export function validatePhone(phone) {
     return re.test(phone.replace(/[\s-]/g, ''));
 }
 
+// Transaction ID validation
+export function validateTransactionId(transactionId) {
+    return transactionId && transactionId.trim().length >= 4;
+}
+
 // Show error message
 export function showError(message) {
     const errorAlert = document.getElementById('errorAlert');

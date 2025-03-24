@@ -151,7 +151,7 @@ const api = {
                         event_name: registrationData.eventNames || '',
                         payment_status: registrationData.paymentMethod === 'qr' ? 'pending' : 'awaiting_payment',
                         payment_id: paymentId,
-                        payment_proof_url: paymentProofUrl,
+                        transaction_id: registrationData.transactionId,
                         payment_method: registrationData.paymentMethod,
                         created_at: new Date().toISOString(),
                         category: registrationData.category || '',

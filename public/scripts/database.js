@@ -48,22 +48,14 @@ export async function fetchEvents() {
  */
 export async function submitRegistration(registrationData) {
     try {
-        // Upload payment proof if QR payment
+        // No need for payment proof upload
         let paymentId = null;
         
-        if (registrationData.paymentMethod === 'qr' && registrationData.paymentProof) {
-            // Upload payment proof using PhotoService
-            const uploadResult = await PhotoService.uploadPhoto(
-                registrationData.paymentProof,
-                TABLES.STORAGE.PAYMENT_PROOFS,
-                'payment-proofs',
-                true // optimize the image
-            );
-            
-            if (!uploadResult.success) {
-                throw new Error(uploadResult.error || 'Failed to upload payment proof');
-            }
-            
+        // Store transaction ID
+        const transactionId = registrationData.transactionId || null;
+        
+        // Create payment record with transaction ID only
+        if (registrationData.payment_method === 'qr' && transactionId) {
             // Create payment record
             const { data: paymentData, error: paymentError } = await supabase
                 .from(TABLES.PAYMENTS)
@@ -73,8 +65,7 @@ export async function submitRegistration(registrationData) {
                         currency: 'INR',
                         status: 'pending',
                         payment_method: 'qr',
-                        proof_url: uploadResult.url,
-                        proof_path: uploadResult.path,
+                        transaction_id: transactionId,
                         created_at: new Date().toISOString()
                     }
                 ])
@@ -100,11 +91,12 @@ export async function submitRegistration(registrationData) {
                     university: registrationData.university,
                     events: registrationData.selectedEvents,
                     event_name: registrationData.eventNames,
-                    payment_status: registrationData.paymentMethod === 'qr' ? 'pending' : 'awaiting_payment',
+                    payment_status: registrationData.payment_method === 'qr' ? 'pending' : 'awaiting_payment',
                     payment_id: paymentId,
+                    transaction_id: transactionId,
                     created_at: new Date().toISOString(),
-                    team_name: registrationData.teamName || null,
-                    team_members: JSON.stringify(registrationData.teamMembers || []),
+                    team_name: registrationData.team_name || null,
+                    team_members: JSON.stringify(registrationData.team_members || []),
                     category: registrationData.category,
                     fee: registrationData.totalFee
                 }
